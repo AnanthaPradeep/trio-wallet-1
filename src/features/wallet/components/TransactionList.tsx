@@ -1,0 +1,99 @@
+import { useMemo } from 'react'
+import { Inbox } from 'lucide-react'
+import { TransactionTile } from '../../../components/TransactionTile'
+import type { Transaction, Wallet } from '../model/types'
+
+interface TransactionListProps {
+  transactions: Transaction[]
+  wallets?: Wallet[]
+  emptyMessage?: string
+  onDelete?: (id: string) => void
+  groupByDate?: boolean
+}
+
+function groupTransactionsByDate(transactions: Transaction[]): Array<{ label: string; items: Transaction[] }> {
+  const groups = new Map<string, Transaction[]>()
+  const today = new Date()
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  for (const tx of transactions) {
+    const d = new Date(tx.createdAtIso)
+    let label: string
+
+    if (d.toDateString() === today.toDateString()) {
+      label = 'Today'
+    } else if (d.toDateString() === yesterday.toDateString()) {
+      label = 'Yesterday'
+    } else {
+      label = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    }
+
+    const existing = groups.get(label) ?? []
+    existing.push(tx)
+    groups.set(label, existing)
+  }
+
+  return Array.from(groups.entries()).map(([label, items]) => ({ label, items }))
+}
+
+export function TransactionList({
+  transactions,
+  wallets,
+  emptyMessage,
+  onDelete,
+  groupByDate = true,
+}: TransactionListProps) {
+  const walletMap = useMemo(() => {
+    if (!wallets) return new Map<string, string>()
+    return new Map(wallets.map((w) => [w.id, w.name]))
+  }, [wallets])
+
+  if (!transactions.length) {
+    return (
+      <div className="glass flex flex-col items-center gap-3 rounded-3xl py-14 text-center">
+        <Inbox size={40} className="text-gray-300" />
+        <p className="text-sm font-medium text-gray-500">{emptyMessage ?? 'No transactions yet'}</p>
+      </div>
+    )
+  }
+
+  if (!groupByDate) {
+    return (
+      <div className="space-y-2">
+        {transactions.map((tx, i) => {
+          const walletId = tx.fromWalletId ?? tx.toWalletId
+          const walletName = walletId ? walletMap.get(walletId) : undefined
+          return (
+            <TransactionTile key={tx.id} tx={tx} walletName={walletName} onDelete={onDelete} animationDelay={i * 40} />
+          )
+        })}
+      </div>
+    )
+  }
+
+  const groups = groupTransactionsByDate(transactions)
+
+  return (
+    <div className="space-y-6">
+      {groups.map((group) => (
+        <div key={group.label}>
+          <div className="mb-2 flex items-center gap-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-gray-400">{group.label}</span>
+            <div className="h-px flex-1 bg-gray-100" />
+            <span className="text-xs text-gray-400">{group.items.length} item{group.items.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="space-y-2">
+            {group.items.map((tx, i) => {
+              const walletId = tx.fromWalletId ?? tx.toWalletId
+              const walletName = walletId ? walletMap.get(walletId) : undefined
+              return (
+                <TransactionTile key={tx.id} tx={tx} walletName={walletName} onDelete={onDelete} animationDelay={i * 40} />
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}

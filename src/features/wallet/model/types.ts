@@ -1,0 +1,131 @@
+import type { CurrencyCode } from '../../../shared/lib/money'
+
+export interface Wallet {
+  id: string
+  name: string
+  currency: CurrencyCode
+  balanceMinor: number
+  purpose: 'daily' | 'bills' | 'travel' | 'savings' | 'custom'
+  color?: string
+}
+
+export interface BankAccount {
+  id: string
+  bankName: string
+  accountHolder: string
+  accountLast4: string
+  currency: CurrencyCode
+}
+
+export type ExpenseCategory =
+  | 'food'
+  | 'bills'
+  | 'shopping'
+  | 'investment'
+  | 'health'
+  | 'entertainment'
+  | 'travel'
+  | 'transport'
+  | 'education'
+  | 'emergency'
+  | 'other'
+
+export type PaymentType = 'cash' | 'card' | 'upi' | 'bank_transfer' | 'other'
+
+export type TransactionType =
+  | 'expense'
+  | 'income'
+  | 'spend'
+  | 'internal_transfer'
+  | 'bank_transfer'
+  | 'bank_to_wallet'
+
+export type TransactionStatus = 'completed' | 'pending' | 'failed'
+
+export interface Transaction {
+  id: string
+  type: TransactionType
+  status: TransactionStatus
+  currency: CurrencyCode
+  amountMinor: number
+  fromWalletId?: string
+  fromBankAccountId?: string
+  toWalletId?: string
+  toBankAccountId?: string
+  note: string
+  category?: ExpenseCategory
+  tags?: string[]
+  paymentType?: PaymentType
+  source?: string
+  isRecurring?: boolean
+  recurringId?: string
+  createdAtIso: string
+}
+
+export interface SpendInput {
+  walletId: string
+  amountMinor: number
+  note: string
+}
+
+export interface AddExpenseInput {
+  walletId: string
+  amountMinor: number
+  category: ExpenseCategory
+  note: string
+  date: string
+  paymentType: PaymentType
+  tags: string[]
+  isRecurring?: boolean
+}
+
+export interface AddIncomeInput {
+  walletId: string
+  amountMinor: number
+  source: string
+  note: string
+  date: string
+}
+
+export interface InternalTransferInput {
+  fromWalletId: string
+  toWalletId: string
+  amountMinor: number
+  note: string
+}
+
+export interface BankTransferInput {
+  id?: string
+  fromWalletId: string
+  bankAccountId: string
+  amountMinor: number
+  note: string
+}
+
+export interface AddWalletInput {
+  name: string
+  currency: CurrencyCode
+  purpose: Wallet['purpose']
+  initialBalanceMinor: number
+  color?: string
+}
+
+export interface AddBankAccountInput {
+  bankName: string
+  accountHolder: string
+  accountLast4: string
+  currency: CurrencyCode
+}
+
+export interface BankToWalletInput {
+  bankAccountId: string
+  walletId: string
+  amountMinor: number
+  note: string
+}
+
+export interface WalletAppState {
+  wallets: Wallet[]
+  bankAccounts: BankAccount[]
+  transactions: Transaction[]
+}
