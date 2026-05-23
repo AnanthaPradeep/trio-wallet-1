@@ -17,6 +17,14 @@ export interface BankAccount {
   currency: CurrencyCode
 }
 
+export interface CurrencyPool {
+  currency: CurrencyCode
+  totalAddedMinor: number
+  totalSpentMinor: number
+  totalAllocatedMinor: number
+  unallocatedMinor: number
+}
+
 export type ExpenseCategory =
   | 'food'
   | 'bills'
@@ -39,6 +47,7 @@ export type TransactionType =
   | 'internal_transfer'
   | 'bank_transfer'
   | 'bank_to_wallet'
+  | 'allocate_to_wallet'
 
 export type TransactionStatus = 'completed' | 'pending' | 'failed'
 
@@ -80,11 +89,17 @@ export interface AddExpenseInput {
 }
 
 export interface AddIncomeInput {
-  walletId: string
+  currency: CurrencyCode
   amountMinor: number
   source: string
   note: string
   date: string
+}
+
+export interface AllocateToWalletInput {
+  walletId: string
+  amountMinor: number
+  note: string
 }
 
 export interface InternalTransferInput {
@@ -119,12 +134,12 @@ export interface AddBankAccountInput {
 
 export interface BankToWalletInput {
   bankAccountId: string
-  walletId: string
   amountMinor: number
   note: string
 }
 
 export interface WalletAppState {
+  pools: CurrencyPool[]
   wallets: Wallet[]
   bankAccounts: BankAccount[]
   transactions: Transaction[]

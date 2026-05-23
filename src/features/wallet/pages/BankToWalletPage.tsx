@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { SuccessOverlay } from '../../../components/SuccessOverlay'
 import { AmountInput } from '../../../components/AmountInput'
-import { WalletCard } from '../components/WalletCard'
 import { parseMajorToMinor } from '../../../shared/lib/money'
 import { Button } from '../../../shared/ui/Button'
 import { Input } from '../../../shared/ui/Input'
@@ -12,9 +11,8 @@ import { useWalletApp } from '../hooks/useWalletApp'
 
 export function BankToWalletPage() {
   const navigate = useNavigate()
-  const { wallets, bankAccounts, transferBankToWallet } = useWalletApp()
+  const { bankAccounts, transferBankToWallet } = useWalletApp()
   const [bankAccountId, setBankAccountId] = useState(bankAccounts[0]?.id ?? '')
-  const [walletId, setWalletId] = useState(wallets[0]?.id ?? '')
   const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
   const [error, setError] = useState('')
@@ -22,17 +20,17 @@ export function BankToWalletPage() {
 
   const selectedBank = bankAccounts.find((a) => a.id === bankAccountId)
   const amountMinor = parseMajorToMinor(amount, selectedBank?.currency ?? 'INR')
-  const walletOptions = useMemo(
-    () => wallets.filter((w) => w.currency === selectedBank?.currency),
-    [selectedBank?.currency, wallets],
+  const isCurrencySupported = useMemo(
+    () => bankAccounts.some((acc) => acc.currency === selectedBank?.currency),
+    [bankAccounts, selectedBank?.currency],
   )
 
   const submit = (e: { preventDefault(): void }) => {
     e.preventDefault()
     if (!amount || amountMinor <= 0) { setError('Enter a valid amount.'); return }
-    if (!walletId) { setError('Select a destination wallet.'); return }
+    if (!isCurrencySupported) { setError('Selected bank currency is not supported.'); return }
     try {
-      transferBankToWallet({ bankAccountId, walletId, amountMinor, note: note.trim() || 'Bank deposit' })
+      transferBankToWallet({ bankAccountId, amountMinor, note: note.trim() || 'Bank deposit to pool' })
       setSuccess(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Transfer failed.')
@@ -50,15 +48,15 @@ export function BankToWalletPage() {
           <ArrowLeft size={18} />
         </button>
         <div>
-          <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Bank to Wallet</h1>
-          <p className="text-sm text-gray-500">Top up your wallet from bank</p>
+          <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Bank to Total Pool</h1>
+          <p className="text-sm text-gray-500">Add money to pool first, then allocate to wallets</p>
         </div>
       </div>
 
       <form onSubmit={submit} className="space-y-5">
         <div className="glass rounded-3xl p-5 space-y-3">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">From Bank Account</p>
-          <Select value={bankAccountId} onChange={(e) => { setBankAccountId(e.target.value); setWalletId(''); setError('') }}>
+          <Select value={bankAccountId} onChange={(e) => { setBankAccountId(e.target.value); setError('') }}>
             {bankAccounts.map((a) => (
               <option key={a.id} value={a.id}>{a.bankName} — ****{a.accountLast4} ({a.currency})</option>
             ))}
@@ -70,27 +68,16 @@ export function BankToWalletPage() {
           <AmountInput value={amount} onChange={(v) => { setAmount(v); setError('') }} currency={selectedBank?.currency ?? 'INR'} />
         </div>
 
-        {selectedBank && (
-          <div className="space-y-2">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">To Wallet</p>
-            {walletOptions.length === 0 ? (
-              <p className="text-sm text-gray-400">No wallets match this bank's currency.</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {walletOptions.map((w) => (
-                  <WalletCard key={w.id} wallet={w} compact selected={walletId === w.id} onClick={() => { setWalletId(w.id); setError('') }} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        <div className="glass rounded-2xl p-4">
+          <p className="text-sm text-gray-600">This deposit will be added to the {selectedBank?.currency ?? 'INR'} total pool.</p>
+        </div>
 
         <div className="glass rounded-3xl p-5">
           <Input label="Note (optional)" type="text" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Salary, savings top-up, etc." />
         </div>
 
         {error && <p className="text-sm text-red-500 px-1">{error}</p>}
-        <Button type="submit" variant="success" fullWidth size="lg">Add Funds</Button>
+        <Button type="submit" variant="success" fullWidth size="lg">Add Funds to Pool</Button>
       </form>
     </div>
   )

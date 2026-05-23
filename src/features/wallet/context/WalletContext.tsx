@@ -8,6 +8,7 @@ import type {
   AddExpenseInput,
   AddIncomeInput,
   AddWalletInput,
+  AllocateToWalletInput,
   BankToWalletInput,
   BankTransferInput,
   InternalTransferInput,
@@ -19,6 +20,7 @@ interface WalletContextValue extends WalletAppState {
   spendFromWallet: (input: SpendInput) => void
   addExpense: (input: AddExpenseInput) => void
   addIncome: (input: AddIncomeInput) => void
+  allocateToWallet: (input: AllocateToWalletInput) => void
   deleteTransaction: (transactionId: string) => void
   transferWalletToWallet: (input: InternalTransferInput) => void
   transferWalletToBank: (input: BankTransferInput) => void
@@ -34,7 +36,12 @@ const WalletContext = createContext<WalletContextValue | undefined>(undefined)
 function loadState(): WalletAppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.walletState)
-    if (raw) return JSON.parse(raw) as WalletAppState
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<WalletAppState>
+      if (Array.isArray(parsed.pools) && Array.isArray(parsed.wallets) && Array.isArray(parsed.transactions)) {
+        return parsed as WalletAppState
+      }
+    }
   } catch {}
   return initialWalletState
 }
@@ -52,6 +59,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       spendFromWallet: (input) => dispatch({ type: 'SPEND', payload: input }),
       addExpense: (input) => dispatch({ type: 'ADD_EXPENSE', payload: input }),
       addIncome: (input) => dispatch({ type: 'ADD_INCOME', payload: input }),
+      allocateToWallet: (input) => dispatch({ type: 'ALLOCATE_TO_WALLET', payload: input }),
       deleteTransaction: (transactionId) => dispatch({ type: 'DELETE_TRANSACTION', payload: { transactionId } }),
       transferWalletToWallet: (input) => dispatch({ type: 'INTERNAL_TRANSFER', payload: input }),
       transferWalletToBank: (input) => {

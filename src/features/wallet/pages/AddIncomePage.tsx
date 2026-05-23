@@ -7,33 +7,31 @@ import { INCOME_SOURCES } from '../model/categories'
 import { parseMajorToMinor } from '../../../shared/lib/money'
 import { Button } from '../../../shared/ui/Button'
 import { Input } from '../../../shared/ui/Input'
+import { Select } from '../../../shared/ui/Select'
 import { useWalletApp } from '../hooks/useWalletApp'
-import { WalletCard } from '../components/WalletCard'
 import { cn } from '../../../shared/lib/cn'
 
 export function AddIncomePage() {
   const navigate = useNavigate()
-  const { wallets, addIncome } = useWalletApp()
+  const { pools, addIncome } = useWalletApp()
 
   const [amount, setAmount] = useState('')
-  const [walletId, setWalletId] = useState(wallets[0]?.id ?? '')
+  const [currency, setCurrency] = useState(pools[0]?.currency ?? 'INR')
   const [source, setSource] = useState(INCOME_SOURCES[0]!)
   const [customSource, setCustomSource] = useState('')
   const [note, setNote] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const selectedWallet = wallets.find((w) => w.id === walletId)
-  const amountMinor = parseMajorToMinor(amount, selectedWallet?.currency ?? 'INR')
+  const amountMinor = parseMajorToMinor(amount, currency)
   const finalSource = source === 'Other' ? customSource : source
 
   const submit = (e: { preventDefault(): void }) => {
     e.preventDefault()
     if (!amount || amountMinor <= 0) { setError('Enter a valid amount.'); return }
-    if (!walletId) { setError('Select a wallet.'); return }
     if (!finalSource.trim()) { setError('Enter an income source.'); return }
     try {
-      addIncome({ walletId, amountMinor, source: finalSource.trim(), note, date: new Date().toISOString() })
+      addIncome({ currency, amountMinor, source: finalSource.trim(), note, date: new Date().toISOString() })
       setSuccess(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save income.')
@@ -66,8 +64,17 @@ export function AddIncomePage() {
           <AmountInput
             value={amount}
             onChange={(v) => { setAmount(v); setError('') }}
-            currency={selectedWallet?.currency ?? 'INR'}
+            currency={currency}
           />
+        </div>
+
+        <div className="glass rounded-3xl p-5 space-y-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Add to Total Pool Currency</p>
+          <Select value={currency} onChange={(e) => { setCurrency(e.target.value as typeof currency); setError('') }}>
+            {pools.map((pool) => (
+              <option key={pool.currency} value={pool.currency}>{pool.currency}</option>
+            ))}
+          </Select>
         </div>
 
         <div className="glass rounded-3xl p-5 space-y-3">
@@ -92,15 +99,6 @@ export function AddIncomePage() {
           {source === 'Other' && (
             <Input type="text" value={customSource} onChange={(e) => setCustomSource(e.target.value)} placeholder="Describe the source" />
           )}
-        </div>
-
-        <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Add to Wallet</p>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {wallets.map((w) => (
-              <WalletCard key={w.id} wallet={w} compact selected={walletId === w.id} onClick={() => { setWalletId(w.id); setError('') }} />
-            ))}
-          </div>
         </div>
 
         <div className="glass rounded-3xl p-5">

@@ -3,8 +3,11 @@ import { Home, TrendingDown, Wallet, BarChart3, ClipboardList, Settings } from '
 
 export const APP_ROUTES = {
   dashboard: '/',
+  login: '/login',
+  register: '/register',
   addExpense: '/add-expense',
   addIncome: '/add-income',
+  allocateFunds: '/allocate-funds',
   analytics: '/analytics',
   spend: '/spend',
   transferInternal: '/transfer-internal',

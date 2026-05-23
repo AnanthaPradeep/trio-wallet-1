@@ -20,6 +20,7 @@ const TYPE_CONFIG: Record<
   expense:           { label: 'Expense',  amountColor: 'text-red-500',     amountPrefix: '−', bgColor: 'bg-red-50',     icon: TrendingDown    },
   spend:             { label: 'Spend',    amountColor: 'text-red-500',     amountPrefix: '−', bgColor: 'bg-red-50',     icon: TrendingDown    },
   income:            { label: 'Income',   amountColor: 'text-emerald-600', amountPrefix: '+', bgColor: 'bg-emerald-50', icon: Wallet          },
+  allocate_to_wallet:{ label: 'Allocate', amountColor: 'text-indigo-600',  amountPrefix: '⇢', bgColor: 'bg-indigo-50',  icon: ArrowRightLeft  },
   internal_transfer: { label: 'Transfer', amountColor: 'text-blue-600',    amountPrefix: '⇄', bgColor: 'bg-blue-50',   icon: ArrowLeftRight  },
   bank_transfer:     { label: 'Bank Out', amountColor: 'text-orange-500',  amountPrefix: '→', bgColor: 'bg-orange-50', icon: Landmark        },
   bank_to_wallet:    { label: 'Bank In',  amountColor: 'text-emerald-600', amountPrefix: '←', bgColor: 'bg-emerald-50',icon: ArrowRightLeft  },

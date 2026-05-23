@@ -18,6 +18,7 @@ const TYPE_FILTERS: TypeFilter[] = [
   { key: 'all',               label: 'All',       icon: FolderOpen     },
   { key: 'expense',           label: 'Expenses',  icon: TrendingDown   },
   { key: 'income',            label: 'Income',    icon: Wallet         },
+  { key: 'allocate_to_wallet',label: 'Allocate',  icon: Wallet         },
   { key: 'internal_transfer', label: 'Transfers', icon: ArrowLeftRight },
   { key: 'bank_to_wallet',    label: 'Bank In',   icon: Landmark       },
   { key: 'bank_transfer',     label: 'Bank Out',  icon: Landmark       },

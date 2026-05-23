@@ -1,19 +1,15 @@
 import { Link } from 'react-router-dom'
-import { Globe } from 'lucide-react'
 import { APP_ROUTES } from '../../../shared/constants/routes'
 import { TransactionList } from '../components/TransactionList'
 import { WalletCard } from '../components/WalletCard'
 import { useWalletApp } from '../hooks/useWalletApp'
-import { useWalletTotals } from '../hooks/useWalletTotals'
 import { useDisplayCurrency } from '../../../shared/hooks/useDisplayCurrency'
 import { useMemo } from 'react'
 import { cn } from '../../../shared/lib/cn'
-import type { CurrencyCode } from '../../../shared/lib/money'
 
 export function DashboardPage() {
-  const { wallets, transactions, deleteTransaction } = useWalletApp()
-  const totals = useWalletTotals()
-  const { formatDisplay } = useDisplayCurrency()
+  const { wallets, pools, transactions, deleteTransaction } = useWalletApp()
+  const { displayCurrency, convertToDisplay, formatDisplay } = useDisplayCurrency()
 
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -21,20 +17,60 @@ export function DashboardPage() {
   const monthlyExpenses = useMemo(
     () =>
       transactions
-        .filter((tx) => (tx.type === 'expense' || tx.type === 'spend') && new Date(tx.createdAtIso) >= startOfMonth)
-        .reduce((sum, tx) => sum + tx.amountMinor, 0),
-    [transactions],
+        .filter(
+          (tx) =>
+            tx.status === 'completed' &&
+            (tx.type === 'expense' || tx.type === 'spend' || tx.type === 'bank_transfer') &&
+            new Date(tx.createdAtIso) >= startOfMonth,
+        )
+        .reduce((sum, tx) => sum + convertToDisplay(tx.amountMinor, tx.currency), 0),
+    [transactions, convertToDisplay],
   )
 
   const monthlyIncome = useMemo(
     () =>
       transactions
-        .filter((tx) => tx.type === 'income' && new Date(tx.createdAtIso) >= startOfMonth)
-        .reduce((sum, tx) => sum + tx.amountMinor, 0),
-    [transactions],
+        .filter(
+          (tx) =>
+            tx.status === 'completed' &&
+            (tx.type === 'income' || tx.type === 'bank_to_wallet') &&
+            new Date(tx.createdAtIso) >= startOfMonth,
+        )
+        .reduce((sum, tx) => sum + convertToDisplay(tx.amountMinor, tx.currency), 0),
+    [transactions, convertToDisplay],
   )
 
-  const activeBalances = Object.entries(totals).filter(([, amt]) => (amt ?? 0) > 0)
+  const totalEarnedMinor = useMemo(
+    () => pools.reduce((sum, pool) => sum + convertToDisplay(pool.totalAddedMinor, pool.currency), 0),
+    [pools, convertToDisplay],
+  )
+
+  const totalSpentMinor = useMemo(
+    () => pools.reduce((sum, pool) => sum + convertToDisplay(pool.totalSpentMinor, pool.currency), 0),
+    [pools, convertToDisplay],
+  )
+
+  const totalPoolMinor = useMemo(() => totalEarnedMinor - totalSpentMinor, [totalEarnedMinor, totalSpentMinor])
+
+  const allocatedTotalMinor = useMemo(
+    () => wallets.reduce((sum, wallet) => sum + convertToDisplay(wallet.balanceMinor, wallet.currency), 0),
+    [wallets, convertToDisplay],
+  )
+
+  const unallocatedTotalMinor = useMemo(
+    () => pools.reduce((sum, pool) => sum + convertToDisplay(pool.unallocatedMinor, pool.currency), 0),
+    [pools, convertToDisplay],
+  )
+
+  const statCards = [
+    { label: 'Total Pool', value: formatDisplay(totalPoolMinor, displayCurrency), tone: 'text-gray-900' },
+    { label: 'Allocated Total', value: formatDisplay(allocatedTotalMinor, displayCurrency), tone: 'text-blue-600' },
+    { label: 'Unallocated Amount', value: formatDisplay(unallocatedTotalMinor, displayCurrency), tone: 'text-amber-600' },
+    { label: 'Total Spent', value: formatDisplay(totalSpentMinor, displayCurrency), tone: 'text-red-500' },
+    { label: 'Total Earned', value: formatDisplay(totalEarnedMinor, displayCurrency), tone: 'text-emerald-600' },
+    { label: 'Wallet Count', value: String(wallets.length), tone: 'text-gray-900' },
+  ]
+
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
@@ -46,37 +82,30 @@ export function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Your Financial Overview</h1>
       </div>
 
-      {/* Net worth / total balance strip */}
-      {activeBalances.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 sm:gap-3 animate-slide-up delay-75">
-          {activeBalances.map(([currency, amount]) => (
-            <div key={currency} className="glass min-w-36 shrink-0 rounded-3xl px-4 py-3 sm:min-w-40 sm:px-6 sm:py-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Globe size={16} className="text-gray-400" />
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">{currency}</span>
-              </div>
-              <p className="text-xl font-bold text-gray-900 sm:text-2xl">
-                {formatDisplay(amount ?? 0, currency as CurrencyCode)}
-              </p>
-              <p className="text-xs text-gray-400 mt-0.5">Total balance</p>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Core pool and wallet math */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 animate-slide-up delay-75">
+        {statCards.map((card) => (
+          <div key={card.label} className="glass rounded-3xl p-4 sm:p-5">
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">{card.label}</p>
+            <p className={cn('mt-2 text-lg font-bold sm:text-xl', card.tone)}>{card.value}</p>
+            <p className="text-xs text-gray-400 mt-0.5">In {displayCurrency}</p>
+          </div>
+        ))}
+      </div>
 
       {/* Monthly summary */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 animate-slide-up delay-100">
         <div className="glass rounded-3xl p-4 sm:p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Month Spent</p>
           <p className="mt-2 text-lg font-bold text-red-500 sm:text-xl">
-            {formatDisplay(monthlyExpenses, 'INR')}
+            {formatDisplay(monthlyExpenses, displayCurrency)}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">This month</p>
         </div>
         <div className="glass rounded-3xl p-4 sm:p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Month Earned</p>
           <p className="mt-2 text-lg font-bold text-emerald-600 sm:text-xl">
-            {formatDisplay(monthlyIncome, 'INR')}
+            {formatDisplay(monthlyIncome, displayCurrency)}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">This month</p>
         </div>
@@ -86,7 +115,8 @@ export function DashboardPage() {
       <div className="flex gap-2 flex-wrap animate-slide-up delay-150">
         {[
           { to: APP_ROUTES.addExpense,      label: '+ Expense',  color: 'bg-red-500 text-white'   },
-          { to: APP_ROUTES.addIncome,       label: '+ Income',   color: 'bg-emerald-500 text-white'},
+          { to: APP_ROUTES.addIncome,       label: '+ Pool Add', color: 'bg-emerald-500 text-white'},
+          { to: APP_ROUTES.allocateFunds,   label: 'Allocate',   color: 'bg-indigo-500 text-white' },
           { to: APP_ROUTES.transferInternal,label: 'Transfer',   color: 'bg-blue-500 text-white'  },
           { to: APP_ROUTES.analytics,       label: 'Analytics',  color: 'bg-gray-900 text-white'  },
         ].map((action) => (

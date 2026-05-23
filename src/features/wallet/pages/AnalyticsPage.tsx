@@ -27,8 +27,8 @@ function StatCard({ label, value, sub, positive }: { label: string; value: strin
 }
 
 export function AnalyticsPage() {
-  const { transactions, wallets } = useWalletApp()
-  const { formatDisplay } = useDisplayCurrency()
+  const { transactions, wallets, pools } = useWalletApp()
+  const { displayCurrency, convertToDisplay, formatDisplay } = useDisplayCurrency()
 
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -39,24 +39,35 @@ export function AnalyticsPage() {
   )
 
   const totalExpensesMinor = useMemo(
-    () => monthlyTx.filter((tx) => tx.type === 'expense' || tx.type === 'spend').reduce((s, tx) => s + tx.amountMinor, 0),
-    [monthlyTx],
+    () =>
+      monthlyTx
+        .filter((tx) => tx.status === 'completed' && (tx.type === 'expense' || tx.type === 'spend' || tx.type === 'bank_transfer'))
+        .reduce((sum, tx) => sum + convertToDisplay(tx.amountMinor, tx.currency), 0),
+    [monthlyTx, convertToDisplay],
   )
 
   const totalIncomeMinor = useMemo(
-    () => monthlyTx.filter((tx) => tx.type === 'income' || tx.type === 'bank_to_wallet').reduce((s, tx) => s + tx.amountMinor, 0),
-    [monthlyTx],
+    () =>
+      monthlyTx
+        .filter((tx) => tx.status === 'completed' && (tx.type === 'income' || tx.type === 'bank_to_wallet'))
+        .reduce((sum, tx) => sum + convertToDisplay(tx.amountMinor, tx.currency), 0),
+    [monthlyTx, convertToDisplay],
+  )
+
+  const totalPoolMinor = useMemo(
+    () => pools.reduce((sum, pool) => sum + convertToDisplay(pool.totalAddedMinor - pool.totalSpentMinor, pool.currency), 0),
+    [pools, convertToDisplay],
   )
 
   const categoryBreakdown = useMemo(() => {
     const map = new Map<ExpenseCategory, number>()
     for (const tx of transactions) {
-      if ((tx.type === 'expense' || tx.type === 'spend') && tx.category) {
-        map.set(tx.category, (map.get(tx.category) ?? 0) + tx.amountMinor)
+      if ((tx.type === 'expense' || tx.type === 'spend') && tx.category && tx.status === 'completed') {
+        map.set(tx.category, (map.get(tx.category) ?? 0) + convertToDisplay(tx.amountMinor, tx.currency))
       }
     }
     return Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 8)
-  }, [transactions])
+  }, [transactions, convertToDisplay])
 
   const savingsRate = totalIncomeMinor > 0
     ? Math.round(((totalIncomeMinor - totalExpensesMinor) / totalIncomeMinor) * 100)
@@ -74,12 +85,12 @@ export function AnalyticsPage() {
 
       {/* Overview cards */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
-        <StatCard label="Monthly Spend"  value={formatDisplay(totalExpensesMinor, 'INR')} sub="This month" />
-        <StatCard label="Monthly Income" value={formatDisplay(totalIncomeMinor, 'INR')}   sub="This month" positive />
+        <StatCard label="Monthly Spend"  value={formatDisplay(totalExpensesMinor, displayCurrency)} sub="This month" />
+        <StatCard label="Monthly Income" value={formatDisplay(totalIncomeMinor, displayCurrency)}   sub="This month" positive />
         <StatCard label="Savings Rate"   value={`${savingsRate}%`} sub={savingsRate >= 0 ? 'On track' : 'Overspending'} />
         <StatCard
-          label="Total Balance"
-          value={formatDisplay(wallets.reduce((s, w) => s + w.balanceMinor, 0), 'INR')}
+          label="Total Pool"
+          value={formatDisplay(totalPoolMinor, displayCurrency)}
           sub={`${wallets.length} wallets`}
         />
       </div>
@@ -102,7 +113,7 @@ export function AnalyticsPage() {
                       <meta.icon size={18} />
                       <span className="text-sm font-medium text-gray-800">{meta.label}</span>
                     </div>
-                    <span className="text-sm font-bold text-gray-900">{formatDisplay(amount, 'INR')}</span>
+                    <span className="text-sm font-bold text-gray-900">{formatDisplay(amount, displayCurrency)}</span>
                   </div>
                   <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                     <div className="h-full rounded-full bg-black transition-all duration-700" style={{ width: `${pct}%` }} />
@@ -149,8 +160,8 @@ export function AnalyticsPage() {
         <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
           {[
             { label: 'Expenses',  count: monthlyTx.filter((t) => t.type === 'expense' || t.type === 'spend').length, color: 'text-red-500'     },
-            { label: 'Income',    count: monthlyTx.filter((t) => t.type === 'income').length,                         color: 'text-emerald-600' },
-            { label: 'Transfers', count: monthlyTx.filter((t) => t.type === 'internal_transfer').length,               color: 'text-blue-600'   },
+            { label: 'Income',    count: monthlyTx.filter((t) => t.type === 'income' || t.type === 'bank_to_wallet').length, color: 'text-emerald-600' },
+            { label: 'Transfers', count: monthlyTx.filter((t) => t.type === 'internal_transfer' || t.type === 'allocate_to_wallet').length, color: 'text-blue-600'   },
           ].map((item) => (
             <div key={item.label}>
               <p className={cn('text-3xl font-bold', item.color)}>{item.count}</p>

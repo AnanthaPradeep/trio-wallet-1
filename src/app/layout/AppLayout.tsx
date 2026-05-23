@@ -5,6 +5,7 @@ import { G20_REGIONS } from '../../shared/constants/regions'
 import { QuickActionFAB } from '../../components/QuickActionFAB'
 import { useDisplayCurrency } from '../../shared/hooks/useDisplayCurrency'
 import { cn } from '../../shared/lib/cn'
+import { useAuth } from '../../features/auth/hooks/useAuth'
 
 const PAGE_TITLES: Record<string, string> = {
   '/': 'Dashboard',
@@ -33,6 +34,13 @@ export function AppLayout() {
   const pageTitle = PAGE_TITLES[location.pathname] ?? 'Trio Wallet'
   const isHome = location.pathname === '/'
   const { region, setRegion } = useDisplayCurrency()
+  const { user, logout } = useAuth()
+  const initials = user?.name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('')
 
   return (
     <div className="relative min-h-screen bg-linear-to-br from-white via-blue-50/30 to-purple-50/30 text-gray-900">
@@ -81,18 +89,42 @@ export function AppLayout() {
               ))}
             </nav>
 
-            {/* Region selector */}
-            <div className="flex items-center gap-1">
-              <Globe size={15} className="text-gray-400 shrink-0" />
-              <select
-                value={region.code}
-                onChange={(e) => setRegion(e.target.value)}
-                className="rounded-xl border border-gray-200 bg-white px-2 py-1.5 text-[11px] font-semibold text-gray-700 outline-none focus:border-black focus:ring-2 focus:ring-black/10 sm:text-xs"
+            {/* Region selector + user */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <Globe size={15} className="text-gray-400 shrink-0" />
+                <select
+                  value={region.code}
+                  onChange={(e) => setRegion(e.target.value)}
+                  className="rounded-xl border border-gray-200 bg-white px-2 py-1.5 text-[11px] font-semibold text-gray-700 outline-none focus:border-black focus:ring-2 focus:ring-black/10 sm:text-xs"
+                >
+                  {G20_REGIONS.map((r) => (
+                    <option key={r.code} value={r.code}>{r.symbol} {r.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="button"
+                onClick={logout}
+                className="rounded-xl border border-gray-200 bg-white px-2 py-1.5 text-[11px] font-semibold text-gray-600 transition hover:border-gray-300 hover:text-gray-900 md:hidden"
               >
-                {G20_REGIONS.map((r) => (
-                  <option key={r.code} value={r.code}>{r.symbol} {r.name}</option>
-                ))}
-              </select>
+                Logout
+              </button>
+
+              <div className="hidden items-center gap-2 rounded-2xl border border-black/10 bg-white px-2 py-1.5 md:flex">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black text-[10px] font-bold text-white">
+                  {initials || 'U'}
+                </div>
+                <div className="max-w-28 truncate text-xs font-semibold text-gray-700">{user?.name ?? 'User'}</div>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="rounded-lg border border-gray-200 px-2 py-1 text-[11px] font-semibold text-gray-600 transition hover:border-gray-300 hover:text-gray-900"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
