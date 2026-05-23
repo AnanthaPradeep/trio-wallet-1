@@ -39,19 +39,19 @@ export function QuickActionFAB() {
   }
 
   return (
-    <div ref={ref} className="fixed bottom-24 right-5 z-50 flex flex-col-reverse items-end gap-3 md:bottom-8">
+    <div ref={ref} className="fixed bottom-20 right-3 z-50 flex flex-col-reverse items-end gap-2.5 sm:bottom-22 sm:right-4 md:bottom-8 md:right-6 lg:right-8">
       {open && FAB_ACTIONS.map((action, i) => (
         <div
           key={action.to}
           className="animate-fab flex items-center gap-3 opacity-0"
           style={{ animationDelay: `${i * 50}ms`, animationFillMode: 'forwards' }}
         >
-          <span className="glass rounded-2xl px-4 py-2 text-sm font-semibold text-gray-800 shadow-lg whitespace-nowrap">
+          <span className="glass whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs font-semibold text-gray-800 shadow-lg sm:px-4 sm:py-2 sm:text-sm">
             {action.label}
           </span>
           <button
             onClick={() => handleAction(action.to)}
-            className="flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-xl transition-all duration-200 active:scale-90 hover:scale-110"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl text-white shadow-xl transition-all duration-200 active:scale-90 hover:scale-110 sm:h-12 sm:w-12"
             style={{ backgroundColor: action.color }}
           >
             <action.icon size={22} />
@@ -62,7 +62,7 @@ export function QuickActionFAB() {
       {/* Main FAB */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-black text-white shadow-2xl shadow-black/30 transition-all duration-300 active:scale-90 hover:scale-105 animate-pulse-glow"
+        className="animate-pulse-glow flex h-12 w-12 items-center justify-center rounded-2xl bg-black text-white shadow-2xl shadow-black/30 transition-all duration-300 active:scale-90 hover:scale-105 sm:h-14 sm:w-14"
         aria-label="Quick actions"
       >
         <span className="transition-transform duration-300" style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)' }}>

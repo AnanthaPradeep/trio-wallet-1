@@ -39,23 +39,23 @@ export function DashboardPage() {
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
   return (
-    <div className="space-y-8 pb-32">
+    <div className="space-y-6 pb-20 sm:space-y-7 sm:pb-24 md:space-y-8 md:pb-10">
       {/* Hero greeting */}
       <div className="animate-slide-up space-y-1">
         <p className="text-sm text-gray-500 font-medium">{greeting}</p>
-        <h1 className="text-3xl font-bold text-gray-900">Your Financial Overview</h1>
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Your Financial Overview</h1>
       </div>
 
       {/* Net worth / total balance strip */}
       {activeBalances.length > 0 && (
-        <div className="flex gap-3 overflow-x-auto pb-1 animate-slide-up delay-75">
+        <div className="flex gap-2 overflow-x-auto pb-1 sm:gap-3 animate-slide-up delay-75">
           {activeBalances.map(([currency, amount]) => (
-            <div key={currency} className="glass shrink-0 rounded-3xl px-6 py-4 min-w-40">
+            <div key={currency} className="glass min-w-36 shrink-0 rounded-3xl px-4 py-3 sm:min-w-40 sm:px-6 sm:py-4">
               <div className="flex items-center gap-2 mb-1">
                 <Globe size={16} className="text-gray-400" />
                 <span className="text-xs font-bold uppercase tracking-widest text-gray-400">{currency}</span>
               </div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xl font-bold text-gray-900 sm:text-2xl">
                 {formatDisplay(amount ?? 0, currency as CurrencyCode)}
               </p>
               <p className="text-xs text-gray-400 mt-0.5">Total balance</p>
@@ -65,17 +65,17 @@ export function DashboardPage() {
       )}
 
       {/* Monthly summary */}
-      <div className="grid grid-cols-2 gap-3 animate-slide-up delay-100">
-        <div className="glass rounded-3xl p-5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 animate-slide-up delay-100">
+        <div className="glass rounded-3xl p-4 sm:p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Month Spent</p>
-          <p className="mt-2 text-xl font-bold text-red-500">
+          <p className="mt-2 text-lg font-bold text-red-500 sm:text-xl">
             {formatDisplay(monthlyExpenses, 'INR')}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">This month</p>
         </div>
-        <div className="glass rounded-3xl p-5">
+        <div className="glass rounded-3xl p-4 sm:p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Month Earned</p>
-          <p className="mt-2 text-xl font-bold text-emerald-600">
+          <p className="mt-2 text-lg font-bold text-emerald-600 sm:text-xl">
             {formatDisplay(monthlyIncome, 'INR')}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">This month</p>
@@ -119,7 +119,7 @@ export function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {wallets.map((wallet) => (
               <WalletCard key={wallet.id} wallet={wallet} />
             ))}

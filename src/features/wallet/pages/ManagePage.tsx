@@ -114,7 +114,7 @@ function ManageWallets() {
 
           <Input label="Wallet Name" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Emergency Fund" />
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">Currency</label>
               <Select value={currency} onChange={(e) => setCurrency(e.target.value as typeof currency)}>
@@ -231,7 +231,7 @@ function ManageBankAccounts() {
           <p className="text-sm font-bold text-gray-700">New Bank Account</p>
           <Input label="Bank Name" type="text" value={bankName} onChange={(e) => setBankName(e.target.value)} placeholder="e.g. Sunrise Bank" />
           <Input label="Account Holder" type="text" value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} placeholder="Full name" />
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
             <Input label="Last 4 Digits" type="text" maxLength={4} value={accountLast4} onChange={(e) => setAccountLast4(e.target.value.replace(/\D/g, ''))} placeholder="1234" />
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">Currency</label>
@@ -253,7 +253,7 @@ function ManageBankAccounts() {
 
 export function ManagePage() {
   return (
-    <div className="space-y-10 pb-32 animate-fade-in">
+    <div className="space-y-8 pb-20 sm:space-y-9 sm:pb-24 md:space-y-10 md:pb-10 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Manage</h1>
         <p className="text-sm text-gray-500">Configure your wallets and bank accounts</p>

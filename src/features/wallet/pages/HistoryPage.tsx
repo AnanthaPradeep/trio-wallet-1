@@ -43,7 +43,7 @@ export function HistoryPage() {
   const showCategoryFilter = typeFilter === 'all' || typeFilter === 'expense' || typeFilter === 'spend'
 
   return (
-    <div className="space-y-5 pb-32 animate-fade-in">
+    <div className="space-y-5 pb-20 sm:pb-24 md:pb-10 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Transaction History</h1>
         <p className="text-sm text-gray-500">{transactions.length} total transactions</p>
@@ -70,7 +70,7 @@ export function HistoryPage() {
       </div>
 
       {/* Type filter chips */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
         {TYPE_FILTERS.map((f) => (
           <button
             key={f.key}
@@ -90,7 +90,7 @@ export function HistoryPage() {
 
       {/* Category filter */}
       {showCategoryFilter && (
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
           <button
             onClick={() => setCategoryFilter('all')}
             className={cn(

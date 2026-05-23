@@ -12,7 +12,7 @@ export function SuccessOverlay({ message, onDone }: SuccessOverlayProps) {
   }, [onDone])
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/30 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-fade-in">
       <div className="animate-scale-pop glass flex flex-col items-center gap-4 rounded-3xl px-10 py-8 text-center shadow-2xl">
         {/* Animated check */}
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/30">

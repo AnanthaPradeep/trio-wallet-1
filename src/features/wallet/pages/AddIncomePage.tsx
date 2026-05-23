@@ -45,8 +45,8 @@ export function AddIncomePage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg space-y-6 pb-32 animate-slide-up">
-      <div className="flex items-center gap-4">
+    <div className="mx-auto w-full max-w-full space-y-5 pb-20 sm:max-w-2xl sm:space-y-6 sm:pb-24 md:max-w-2xl md:pb-10 animate-slide-up">
+      <div className="flex items-center gap-3 sm:gap-4">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -55,7 +55,7 @@ export function AddIncomePage() {
           <ArrowLeft size={18} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Add Income</h1>
+          <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Add Income</h1>
           <p className="text-sm text-gray-500">Record money received</p>
         </div>
       </div>

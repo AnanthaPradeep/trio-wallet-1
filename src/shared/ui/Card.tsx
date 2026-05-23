@@ -12,10 +12,10 @@ export function Card({ children, className, variant = 'default' }: CardProps) {
     <div
       className={cn(
         'rounded-2xl',
-        variant === 'default' && 'glass p-6',
-        variant === 'dark' && 'glass-dark p-6 text-white',
-        variant === 'subtle' && 'glass-subtle p-6',
-        variant === 'outline' && 'rounded-2xl border border-black/8 bg-white p-6 shadow-sm',
+        variant === 'default' && 'glass p-4 sm:p-5 md:p-6',
+        variant === 'dark' && 'glass-dark p-4 text-white sm:p-5 md:p-6',
+        variant === 'subtle' && 'glass-subtle p-4 sm:p-5 md:p-6',
+        variant === 'outline' && 'rounded-2xl border border-black/8 bg-white p-4 shadow-sm sm:p-5 md:p-6',
         className,
       )}
     >

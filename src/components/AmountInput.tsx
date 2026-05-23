@@ -28,11 +28,11 @@ export function AmountInput({ value, onChange, currency = 'INR', error }: Amount
   return (
     <div className="space-y-3">
       <div
-        className={`relative flex items-center rounded-3xl border-2 bg-gray-50 px-6 py-5 transition-all duration-200 ${
+        className={`relative flex items-center rounded-3xl border-2 bg-gray-50 px-4 py-4 transition-all duration-200 sm:px-6 sm:py-5 ${
           focused ? 'border-black bg-white shadow-lg shadow-black/10' : error ? 'border-red-400' : 'border-gray-200'
         }`}
       >
-        <span className="text-3xl font-bold text-gray-400 mr-2">{symbol}</span>
+        <span className="mr-2 text-2xl font-bold text-gray-400 sm:text-3xl">{symbol}</span>
         <input
           type="number"
           inputMode="decimal"
@@ -43,7 +43,7 @@ export function AmountInput({ value, onChange, currency = 'INR', error }: Amount
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder="0.00"
-          className="flex-1 bg-transparent text-4xl font-bold text-gray-900 placeholder-gray-300 outline-none"
+          className="flex-1 bg-transparent text-3xl font-bold text-gray-900 placeholder-gray-300 outline-none sm:text-4xl"
         />
         {value && (
           <button

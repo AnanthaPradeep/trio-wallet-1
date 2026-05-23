@@ -63,18 +63,17 @@ export function AnalyticsPage() {
     : 0
 
   const maxCategoryAmount = categoryBreakdown[0]?.[1] ?? 1
-  const totalWalletBalance = wallets.reduce((sum, w) => sum + w.amountMinor, 0)
   const monthName = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in">
+    <div className="space-y-6 pb-20 sm:pb-24 md:pb-10 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
         <p className="text-sm text-gray-500">{monthName} overview</p>
       </div>
 
       {/* Overview cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
         <StatCard label="Monthly Spend"  value={formatDisplay(totalExpensesMinor, 'INR')} sub="This month" />
         <StatCard label="Monthly Income" value={formatDisplay(totalIncomeMinor, 'INR')}   sub="This month" positive />
         <StatCard label="Savings Rate"   value={`${savingsRate}%`} sub={savingsRate >= 0 ? 'On track' : 'Overspending'} />
@@ -145,9 +144,9 @@ export function AnalyticsPage() {
       </div>
 
       {/* Activity summary */}
-      <div className="glass rounded-3xl p-5 animate-slide-up delay-300">
+      <div className="glass rounded-3xl p-4 sm:p-5 animate-slide-up delay-300">
         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Activity Summary</p>
-        <div className="grid grid-cols-3 gap-4 text-center">
+        <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
           {[
             { label: 'Expenses',  count: monthlyTx.filter((t) => t.type === 'expense' || t.type === 'spend').length, color: 'text-red-500'     },
             { label: 'Income',    count: monthlyTx.filter((t) => t.type === 'income').length,                         color: 'text-emerald-600' },

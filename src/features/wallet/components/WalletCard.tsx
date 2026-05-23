@@ -30,21 +30,21 @@ export function WalletCard({ wallet, compact, selected, onClick }: WalletCardPro
         type="button"
         onClick={onClick}
         className={cn(
-          'flex items-center gap-3 rounded-2xl border p-3 text-left transition-all duration-200 w-full',
+          'flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition-all duration-200 sm:p-3.5',
           selected
             ? 'border-black bg-black text-white shadow-lg shadow-black/15'
             : 'glass border-white/80 hover:border-gray-300',
         )}
       >
         <div
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10"
           style={{ backgroundColor: selected ? 'rgba(255,255,255,0.15)' : `${accentColor}15`,
                    color: selected ? 'white' : accentColor }}
         >
           <Icon size={18} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className={cn('text-sm font-semibold truncate', selected ? 'text-white' : 'text-gray-900')}>
+          <p className={cn('truncate text-sm font-semibold sm:text-base', selected ? 'text-white' : 'text-gray-900')}>
             {wallet.name}
           </p>
           <p className={cn('text-xs truncate', selected ? 'text-white/70' : 'text-gray-500')}>
@@ -57,7 +57,7 @@ export function WalletCard({ wallet, compact, selected, onClick }: WalletCardPro
 
   return (
     <div
-      className="relative overflow-hidden rounded-3xl p-5 text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-0.5"
+      className="relative overflow-hidden rounded-3xl p-4 text-white shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl sm:p-5 md:p-6"
       style={{ background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}cc 100%)` }}
     >
       <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
@@ -72,9 +72,9 @@ export function WalletCard({ wallet, compact, selected, onClick }: WalletCardPro
         </span>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-5 sm:mt-6">
         <p className="text-xs font-medium uppercase tracking-widest text-white/60">Balance</p>
-        <p className="mt-1 text-2xl font-bold leading-tight">
+        <p className="mt-1 text-xl font-bold leading-tight sm:text-2xl">
           {formatDisplay(wallet.balanceMinor, wallet.currency)}
         </p>
       </div>

@@ -51,7 +51,7 @@ export function TransactionList({
 
   if (!transactions.length) {
     return (
-      <div className="glass flex flex-col items-center gap-3 rounded-3xl py-14 text-center">
+      <div className="glass flex flex-col items-center gap-3 rounded-3xl py-12 text-center sm:py-14">
         <Inbox size={40} className="text-gray-300" />
         <p className="text-sm font-medium text-gray-500">{emptyMessage ?? 'No transactions yet'}</p>
       </div>
@@ -60,7 +60,7 @@ export function TransactionList({
 
   if (!groupByDate) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-2 sm:space-y-2.5">
         {transactions.map((tx, i) => {
           const walletId = tx.fromWalletId ?? tx.toWalletId
           const walletName = walletId ? walletMap.get(walletId) : undefined
@@ -75,7 +75,7 @@ export function TransactionList({
   const groups = groupTransactionsByDate(transactions)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {groups.map((group) => (
         <div key={group.label}>
           <div className="mb-2 flex items-center gap-3">

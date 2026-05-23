@@ -12,7 +12,7 @@ export function Input({ label, error, prefix, className, ...props }: InputProps)
     <input
       {...props}
       className={cn(
-        'w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 outline-none transition',
+        'w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition sm:px-4 sm:py-3 sm:text-base',
         'focus:border-black focus:ring-2 focus:ring-black/10',
         error && 'border-red-400 focus:border-red-500 focus:ring-red-100',
         prefix && 'pl-10',
