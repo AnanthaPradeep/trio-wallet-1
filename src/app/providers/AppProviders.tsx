@@ -6,7 +6,7 @@ import { AuthProvider } from '../../features/auth/context/AuthContext'
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AuthProvider>
         <I18nProvider>
           <DisplayCurrencyProvider>
