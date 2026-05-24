@@ -82,71 +82,71 @@ export function DashboardPage() {
 
   const statCards = [
     {
-      label: 'Total Pool',
+      label: 'Total Balance',
       value: formatDisplay(totalPoolMinor, displayCurrency),
-      description: 'Total earned minus total spent across all pools.',
+      description: 'All money added minus all money spent across your wallets.',
       caption: `In ${displayCurrency}`,
-      badgeText: totalPoolMinor >= 0 ? '+Active' : '-Low',
+      badgeText: totalPoolMinor >= 0 ? '+Net' : '-Net',
       gradientClass: 'from-blue-500 via-blue-600 to-sky-500',
     },
     {
-      label: 'Total Earned',
+      label: 'Total Income',
       value: formatDisplay(totalEarnedMinor, displayCurrency),
-      description: 'Sum of all pool add amounts in every wallet currency.',
+      description: 'All completed money added into wallets.',
       caption: `In ${displayCurrency}`,
       badgeText: '+Inflow',
       gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
     },
     {
-      label: 'Total Spent',
+      label: 'Total Expenses',
       value: formatDisplay(totalSpentMinor, displayCurrency),
-      description: 'Sum of all spending deducted from pools.',
+      description: 'All completed spending taken from wallets.',
       caption: `In ${displayCurrency}`,
       badgeText: '-Outflow',
       gradientClass: 'from-rose-500 via-red-600 to-orange-500',
     },
     {
-      label: 'Total Transfer',
+      label: 'Total Bank Transfers',
       value: formatDisplay(totalTransferMinor, displayCurrency),
-      description: 'Sum of completed wallet-to-bank transfer transactions.',
+      description: 'All completed transfers moved from wallets to bank accounts.',
       caption: `In ${displayCurrency}`,
-      badgeText: '+Moved',
+      badgeText: '-Bank',
       gradientClass: 'from-violet-500 via-indigo-600 to-blue-500',
     },
   ]
 
   const monthlyCards = [
     {
-      label: 'Month Spent',
-      value: formatDisplay(monthlyExpenses, displayCurrency),
-      description: 'Completed spend, expense, and bank transfers this month.',
-      caption: 'Includes bank transfer payments',
-      badgeText: '-Outflow',
-      gradientClass: 'from-rose-500 via-red-600 to-orange-500',
-    },
-    {
-      label: 'Monthly Earned',
-      value: formatDisplay(monthlyIncome, displayCurrency),
-      description: 'Completed income and bank-to-pool entries this month.',
-      caption: 'This month',
-      badgeText: '+Inflow',
-      gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
-    },
-    {
-      label: 'Monthly Remaining',
-      value: formatDisplay(Math.abs(monthlyRemaining), displayCurrency),
-      description: 'Monthly earned minus monthly spent for this period.',
+      label: 'This Month Balance',
+      value: formatDisplay(monthlyRemaining, displayCurrency),
+      description: 'Money left this month after income and expenses.',
       caption: monthlyRemaining >= 0 ? 'Surplus this month' : 'Deficit this month',
-      badgeText: monthlyRemaining >= 0 ? '+Surplus' : '-Deficit',
+      badgeText: monthlyRemaining >= 0 ? '+Net' : '-Net',
       gradientClass: monthlyRemaining >= 0
         ? 'from-blue-500 via-blue-600 to-cyan-500'
         : 'from-orange-500 via-amber-600 to-yellow-500',
     },
     {
-      label: 'Monthly Bank Transfer',
+      label: 'This Month Income',
+      value: formatDisplay(monthlyIncome, displayCurrency),
+      description: 'Money received this month from income and bank-to-wallet entries.',
+      caption: `In ${displayCurrency}`,
+      badgeText: '+Inflow',
+      gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
+    },
+    {
+      label: 'This Month Expenses',
+      value: formatDisplay(monthlyExpenses, displayCurrency),
+      description: 'Money spent this month, including wallet spending and bank transfers.',
+      caption: 'Includes bank transfers',
+      badgeText: '-Outflow',
+      gradientClass: 'from-rose-500 via-red-600 to-orange-500',
+    },
+    {
+      label: 'This Month Bank Transfers',
       value: formatDisplay(monthlyBankTransfer, displayCurrency),
-      description: 'Completed wallet-to-bank transfers during this month.',
-      caption: 'Wallet to bank this month',
+      description: 'Money moved from wallets to bank accounts during this month.',
+      caption: 'Wallet to bank only',
       badgeText: '-Bank',
       gradientClass: 'from-violet-500 via-indigo-600 to-blue-500',
     },
@@ -163,13 +163,18 @@ export function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Your Financial Overview</h1>
       </div>
 
-      {/* Core cards */}
+      {/* Overall totals */}
+      <div className="animate-slide-up delay-75 space-y-2">
+        <h2 className="text-lg font-bold text-gray-900">Overall Totals</h2>
+        <p className="text-sm font-medium text-gray-500">Lifetime snapshot across all wallets and transactions.</p>
+      </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up delay-75">
         {statCards.map((card) => (
           <Link
             key={card.label}
             to={APP_ROUTES.analytics}
-            className="block h-full transition-transform hover:scale-[1.01]"
+            aria-label={`${card.label}: ${card.value}. ${card.description}`}
+            className="block h-full rounded-[20px] transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             <DashboardMetricCard
               title={card.label}
@@ -183,13 +188,18 @@ export function DashboardPage() {
         ))}
       </div>
 
-      {/* Monthly summary */}
+      {/* This month */}
+      <div className="animate-slide-up delay-100 space-y-2">
+        <h2 className="text-lg font-bold text-gray-900">This Month</h2>
+        <p className="text-sm font-medium text-gray-500">Current month performance and movement.</p>
+      </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up delay-100">
         {monthlyCards.map((card) => (
           <Link
             key={card.label}
             to={APP_ROUTES.analytics}
-            className="block h-full transition-transform hover:scale-[1.01]"
+            aria-label={`${card.label}: ${card.value}. ${card.description}`}
+            className="block h-full rounded-[20px] transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             <DashboardMetricCard
               title={card.label}
