@@ -201,7 +201,7 @@ export function AppLayout() {
       <div className="pointer-events-none fixed bottom-0 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full bg-pink-50/40 blur-3xl" />
 
       {/* Top header */}
-      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/85 backdrop-blur-xl">
+      <header className="glass-dark-faded sticky top-0 z-40 border-b border-white/10">
         <div ref={menuRootRef} className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3 md:px-6 lg:px-8">
           {/* Left: brand */}
           <Link to={APP_ROUTES.dashboard} className="min-w-0 shrink-0">
@@ -210,8 +210,8 @@ export function AppLayout() {
                 <img src={logo1} alt="Trio Wallet logo" className="h-full w-full object-cover" />
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-medium leading-none text-gray-400">Trio Wallet</p>
-                <p className="truncate text-sm font-bold leading-tight text-gray-900 sm:text-base">
+                <p className="text-xs font-medium leading-none text-slate-400">Trio Wallet</p>
+                <p className="truncate text-sm font-bold leading-tight text-white sm:text-base">
                   {isHome ? 'Smart Money' : pageTitle}
                 </p>
               </div>
@@ -228,7 +228,7 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   cn(
                     'rounded-xl px-3.5 py-2 text-sm font-medium transition',
-                    isActive ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                    isActive ? 'bg-white text-slate-900' : 'text-slate-300 hover:bg-white/10 hover:text-white',
                   )
                 }
               >
@@ -243,8 +243,8 @@ export function AppLayout() {
                 className={cn(
                   'flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-medium transition',
                   isActionsActive || openMenu === 'actions'
-                    ? 'bg-black text-white'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                    ? 'bg-white text-slate-900'
+                    : 'text-slate-300 hover:bg-white/10 hover:text-white',
                 )}
               >
                 Actions
@@ -252,13 +252,13 @@ export function AppLayout() {
               </button>
 
               {openMenu === 'actions' && (
-                <div className="absolute left-0 top-full mt-2 w-56 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
+                <div className="glass-dark-elevated absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl p-2">
                   {ACTION_MENU_LINKS.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
                       onClick={() => setOpenMenu(null)}
-                      className="block rounded-xl px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
+                      className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
                     >
                       {item.label}
                     </Link>
@@ -274,8 +274,8 @@ export function AppLayout() {
                 className={cn(
                   'flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-medium transition',
                   isTransfersActive || openMenu === 'transfers'
-                    ? 'bg-black text-white'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                    ? 'bg-white text-slate-900'
+                    : 'text-slate-300 hover:bg-white/10 hover:text-white',
                 )}
               >
                 Transfers
@@ -283,13 +283,13 @@ export function AppLayout() {
               </button>
 
               {openMenu === 'transfers' && (
-                <div className="absolute left-0 top-full mt-2 w-56 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
+                <div className="glass-dark-elevated absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl p-2">
                   {TRANSFER_MENU_LINKS.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
                       onClick={() => setOpenMenu(null)}
-                      className="block rounded-xl px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
+                      className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
                     >
                       {item.label}
                     </Link>
@@ -302,11 +302,11 @@ export function AppLayout() {
           {/* Right: controls */}
           <div className="flex shrink-0 items-center gap-2">
             <div className="hidden items-center gap-1.5 md:flex">
-              <Globe size={15} className="shrink-0 text-gray-400" />
+              <Globe size={15} className="shrink-0 text-slate-400" />
               <select
                 value={region.code}
                 onChange={(e) => setRegion(e.target.value)}
-                className="rounded-xl border border-gray-200 bg-white px-2 py-1.5 text-[11px] font-semibold text-gray-700 outline-none focus:border-black focus:ring-2 focus:ring-black/10 xl:px-2.5 xl:py-2 xl:text-xs"
+                className="rounded-xl border border-white/15 bg-slate-900/65 px-2 py-1.5 text-[11px] font-semibold text-slate-200 outline-none focus:border-white/35 focus:ring-2 focus:ring-white/15 xl:px-2.5 xl:py-2 xl:text-xs"
               >
                 {G20_REGIONS.map((r) => (
                   <option key={r.code} value={r.code}>{r.symbol} {r.name}</option>
@@ -316,7 +316,7 @@ export function AppLayout() {
 
             <Link
               to={APP_ROUTES.addIncome}
-              className="hidden items-center gap-1.5 rounded-xl bg-black px-3 py-2 text-xs font-semibold text-white transition hover:bg-gray-800 lg:inline-flex"
+              className="hidden items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-200 lg:inline-flex"
             >
               <Plus size={14} />
               Pool Add
@@ -327,24 +327,24 @@ export function AppLayout() {
                 type="button"
                 onClick={() => setOpenMenu((prev) => (prev === 'user' ? null : 'user'))}
                 className={cn(
-                  'flex items-center gap-2 rounded-2xl border border-black/10 bg-white px-2 py-1.5 transition',
-                  openMenu === 'user' ? 'ring-2 ring-black/10' : 'hover:border-black/20',
+                  'flex items-center gap-2 rounded-2xl border border-white/15 bg-white/8 px-2 py-1.5 transition',
+                  openMenu === 'user' ? 'ring-2 ring-white/25' : 'hover:border-white/30',
                 )}
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black text-[10px] font-bold text-white">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-[10px] font-bold text-slate-900">
                   {initials || 'U'}
                 </div>
-                <div className="hidden max-w-24 truncate text-xs font-semibold text-gray-700 xl:block">{user?.name ?? 'User'}</div>
-                <ChevronDown size={14} className={cn('text-gray-500 transition', openMenu === 'user' ? 'rotate-180' : '')} />
+                <div className="hidden max-w-24 truncate text-xs font-semibold text-slate-200 xl:block">{user?.name ?? 'User'}</div>
+                <ChevronDown size={14} className={cn('text-slate-400 transition', openMenu === 'user' ? 'rotate-180' : '')} />
               </button>
 
               {openMenu === 'user' && (
-                <div className="absolute right-0 top-full mt-2 w-44 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
-                  <p className="truncate px-2 py-1 text-xs font-semibold text-gray-500">{user?.name ?? 'User'}</p>
+                <div className="glass-dark-elevated absolute right-0 top-full z-50 mt-2 w-44 rounded-2xl p-2">
+                  <p className="truncate px-2 py-1 text-xs font-semibold text-slate-400">{user?.name ?? 'User'}</p>
                   <Link
                     to={APP_ROUTES.profile}
                     onClick={() => setOpenMenu(null)}
-                    className="mt-1 block rounded-xl px-3 py-2 text-left text-sm font-semibold text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
+                    className="mt-1 block rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-200 transition hover:bg-white/10 hover:text-white"
                   >
                     My Profile
                   </Link>
@@ -354,7 +354,7 @@ export function AppLayout() {
                       setOpenMenu(null)
                       logout()
                     }}
-                    className="mt-1 w-full rounded-xl px-3 py-2 text-left text-sm font-semibold text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
+                    className="mt-1 w-full rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-200 transition hover:bg-white/10 hover:text-white"
                   >
                     Logout
                   </button>
@@ -365,7 +365,7 @@ export function AppLayout() {
         </div>
 
         {/* Tablet nav row */}
-        <div className="hidden border-t border-black/5 md:block lg:hidden">
+        <div className="hidden border-t border-white/10 md:block lg:hidden">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-1 overflow-x-auto px-3 py-2 sm:px-4 md:px-6">
             {TABLET_NAV_LINKS.map((item) => (
               <NavLink
@@ -375,7 +375,7 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   cn(
                     'shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition',
-                    isActive ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                    isActive ? 'bg-white text-slate-900' : 'text-slate-300 hover:bg-white/10 hover:text-white',
                   )
                 }
               >
@@ -384,7 +384,7 @@ export function AppLayout() {
             ))}
             <Link
               to={APP_ROUTES.addIncome}
-              className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-xl bg-black px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-gray-800"
+              className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-slate-200"
             >
               <Plus size={13} />
               Pool Add
@@ -399,7 +399,7 @@ export function AppLayout() {
       </main>
 
       {/* Bottom tab bar (mobile only) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/5 bg-white/90 backdrop-blur-xl md:hidden">
+      <nav className="glass-dark-faded fixed bottom-0 left-0 right-0 z-40 border-t border-white/12 md:hidden">
         <div className="flex items-center justify-around px-2 py-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
           {NAV_ITEMS.map((item) => (
             <NavLink
@@ -409,7 +409,7 @@ export function AppLayout() {
               className={({ isActive }) =>
                 cn(
                   'flex flex-1 flex-col items-center gap-0.5 rounded-2xl px-1 py-2 text-xs font-medium transition-all',
-                  isActive ? 'text-black' : 'text-gray-400 hover:text-gray-600',
+                  isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200',
                 )
               }
             >
@@ -418,7 +418,7 @@ export function AppLayout() {
                   <span
                     className={cn(
                       'flex h-8 w-8 items-center justify-center rounded-xl transition-all',
-                      isActive ? 'bg-black/10 scale-110' : '',
+                      isActive ? 'bg-white/15 scale-110' : '',
                     )}
                   >
                     <item.icon size={18} />
@@ -434,40 +434,40 @@ export function AppLayout() {
       </nav>
 
       {/* Smart glass footer */}
-      <footer className="relative mt-8 overflow-hidden border-t border-white/30 bg-white/45 backdrop-blur-2xl">
-        <div className="pointer-events-none absolute -left-28 top-1/3 h-64 w-64 rounded-full bg-blue-200/40 blur-3xl" />
-        <div className="pointer-events-none absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-orange-200/40 blur-3xl" />
+      <footer className="glass-dark-faded relative mt-8 overflow-hidden border-t border-white/10">
+        <div className="pointer-events-none absolute -left-28 top-1/3 h-64 w-64 rounded-full bg-blue-900/25 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-cyan-900/25 blur-3xl" />
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 md:py-12 lg:px-8">
-          <div className="grid gap-6 border-b border-black/10 pb-8 md:gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-end">
+          <div className="grid gap-6 border-b border-white/10 pb-8 md:gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-end">
             <div>
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-black">
                   <img src={logo1} alt="Trio Wallet logo" className="h-full w-full object-cover" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">Trio Wallet</p>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Smart pool-first money system</p>
+                  <p className="text-sm font-semibold text-white">Trio Wallet</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Smart pool-first money system</p>
                 </div>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-gray-700">
+              <p className="max-w-xl text-sm leading-6 text-slate-300">
                 Track what you add, allocate to wallets with control, and move money across wallets and banks with a clear audit trail.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-white/40 bg-linear-to-br from-white/65 to-white/40 p-4 shadow-[0_8px_24px_rgba(31,41,55,0.08)] backdrop-blur-lg sm:p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Weekly Summary</p>
-              <p className="mt-1 text-sm font-medium text-gray-800">Get your finance pulse in one click.</p>
+            <div className="glass-dark-soft rounded-2xl p-4 sm:p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Weekly Summary</p>
+              <p className="mt-1 text-sm font-medium text-slate-100">Get your finance pulse in one click.</p>
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
                 <Link
                   to={APP_ROUTES.analytics}
-                  className="inline-flex items-center rounded-xl bg-black px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30"
+                  className="inline-flex items-center rounded-xl bg-white px-3.5 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                 >
                   Open Analytics
                 </Link>
                 <Link
                   to={APP_ROUTES.history}
-                  className="inline-flex items-center rounded-xl border border-white/40 bg-white/50 px-3.5 py-2 text-xs font-semibold text-gray-800 transition hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+                  className="inline-flex items-center rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-slate-100 transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
                 >
                   View History
                 </Link>
@@ -475,10 +475,10 @@ export function AppLayout() {
             </div>
           </div>
 
-          <div className="grid gap-x-8 gap-y-8 border-b border-black/10 py-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-x-8 gap-y-8 border-b border-white/10 py-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {FOOTER_LINK_GROUPS.map((group) => (
               <div key={group.title}>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">{group.title}</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{group.title}</h3>
                 <div className="mt-3 flex flex-col gap-2.5">
                   {group.links.map((item) => (
                     <NavLink
@@ -487,10 +487,10 @@ export function AppLayout() {
                       end={item.to === APP_ROUTES.dashboard}
                       className={({ isActive }) =>
                         cn(
-                          'w-fit text-sm font-medium underline-offset-4 transition focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20',
+                          'w-fit text-sm font-medium underline-offset-4 transition focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25',
                           isActive
-                            ? 'text-black'
-                            : 'text-gray-700 hover:text-gray-900 hover:underline',
+                            ? 'text-white'
+                            : 'text-slate-300 hover:text-white hover:underline',
                         )
                       }
                     >
@@ -502,9 +502,9 @@ export function AppLayout() {
             ))}
           </div>
 
-          <div className="grid gap-6 border-b border-black/10 py-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1fr_1fr_auto]">
+          <div className="grid gap-6 border-b border-white/10 py-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1fr_1fr_auto]">
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Social Media</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Social Media</h3>
               <div className="mt-3 flex flex-wrap items-center gap-2.5">
                 {SOCIAL_MEDIA_LINKS.map((social) => (
                   <a
@@ -512,7 +512,7 @@ export function AppLayout() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/45 px-3.5 py-2 text-xs font-semibold text-gray-800 shadow-sm backdrop-blur-md transition hover:bg-white/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-slate-100 shadow-sm backdrop-blur-md transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
                     aria-label={social.label}
                   >
                     <social.icon className="h-3.5 w-3.5" />
@@ -523,18 +523,18 @@ export function AppLayout() {
             </div>
 
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Contact Details</h3>
-              <div className="mt-3 space-y-2.5 text-sm text-gray-700">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Contact Details</h3>
+              <div className="mt-3 space-y-2.5 text-sm text-slate-300">
                 <p className="flex items-center gap-2">
-                  <Mail size={14} className="shrink-0 text-gray-500" />
+                  <Mail size={14} className="shrink-0 text-slate-400" />
                   support@triowallet.app
                 </p>
                 <p className="flex items-center gap-2">
-                  <Phone size={14} className="shrink-0 text-gray-500" />
+                  <Phone size={14} className="shrink-0 text-slate-400" />
                   +91 98765 43210
                 </p>
                 <p className="flex items-start gap-2 leading-6">
-                  <MapPin size={15} className="mt-0.5 shrink-0 text-gray-500" />
+                  <MapPin size={15} className="mt-0.5 shrink-0 text-slate-400" />
                   <span>
                     Trio Wallet HQ, Brigade Tech Gardens,
                     <br />
@@ -545,9 +545,9 @@ export function AppLayout() {
             </div>
 
             <div className="md:col-span-2 lg:col-span-1">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Scan QR</h3>
-              <div className="mt-3 inline-flex items-center gap-3 rounded-2xl border border-white/40 bg-white/45 p-3 shadow-sm backdrop-blur-md">
-                <div className="rounded-xl border border-black/10 bg-white p-2">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Scan QR</h3>
+              <div className="mt-3 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3 shadow-sm backdrop-blur-md">
+                <div className="rounded-xl border border-white/15 bg-white p-2">
                   <QRCodeSVG
                     value={FOOTER_QR_VALUE}
                     size={92}
@@ -558,25 +558,25 @@ export function AppLayout() {
                   />
                 </div>
                 <div className="max-w-44">
-                  <p className="text-xs font-semibold text-gray-800">Open Trio Wallet</p>
-                  <p className="mt-1 text-xs leading-5 text-gray-600">Keep this QR for app download, payment links, or future deep-link flows.</p>
+                  <p className="text-xs font-semibold text-slate-100">Open Trio Wallet</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-300">Keep this QR for app download, payment links, or future deep-link flows.</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col items-start justify-between gap-3 pt-6 sm:flex-row sm:items-center">
-            <p className="text-xs font-medium text-gray-600">© {new Date().getFullYear()} Trio Wallet. Designed for secure personal finance workflows.</p>
+            <p className="text-xs font-medium text-slate-400">© {new Date().getFullYear()} Trio Wallet. Designed for secure personal finance workflows.</p>
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 to={APP_ROUTES.manage}
-                className="rounded-xl border border-white/40 bg-white/45 px-3.5 py-2 text-xs font-semibold text-gray-700 backdrop-blur-md transition hover:bg-white/65 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+                className="rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-slate-200 backdrop-blur-md transition hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
               >
                 Preferences
               </Link>
               <Link
                 to={APP_ROUTES.allocateFunds}
-                className="rounded-xl border border-white/40 bg-white/45 px-3.5 py-2 text-xs font-semibold text-gray-700 backdrop-blur-md transition hover:bg-white/65 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+                className="rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-slate-200 backdrop-blur-md transition hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
               >
                 Allocate Now
               </Link>
