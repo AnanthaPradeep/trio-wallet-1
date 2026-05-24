@@ -18,7 +18,14 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 40%, #faf0ff 70%, #f0f8ff 100%);
+  background:
+    radial-gradient(circle at 18% 24%, rgba(147, 197, 253, 0.20) 0%, rgba(147, 197, 253, 0) 70%),
+    radial-gradient(circle at 82% 28%, rgba(196, 181, 253, 0.18) 0%, rgba(196, 181, 253, 0) 70%),
+    radial-gradient(circle at 54% 84%, rgba(253, 224, 242, 0.16) 0%, rgba(253, 224, 242, 0) 70%),
+    linear-gradient(135deg, #ffffff 0%, #f3f6ff 40%, #fcf5ff 70%, #f5faff 100%);
+  background-repeat: no-repeat;
+  background-size: 170% 170%, 170% 170%, 180% 180%, 100% 100%;
+  animation: bodyGradientDrift 36s ease-in-out infinite alternate;
 }
 
 #root {
@@ -34,11 +41,9 @@ button {
 
 /* ─── Glassmorphism ─── */
 .glass {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08), 0 1px 0 rgba(255, 255, 255, 0.75) inset;
 }
 
 .glass-dark {
@@ -49,10 +54,27 @@ button {
 }
 
 .glass-subtle {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06), 0 1px 0 rgba(255, 255, 255, 0.72) inset;
+}
+
+.glass-control {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+}
+
+.glass-panel-faded {
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08), 0 1px 0 rgba(255, 255, 255, 0.75) inset;
+}
+
+.glass-panel-soft {
+  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06), 0 1px 0 rgba(255, 255, 255, 0.72) inset;
 }
 
 /* ─── Dark Faded Glass ─── */
@@ -74,6 +96,31 @@ button {
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    backdrop-filter: blur(18px) saturate(130%);
+    -webkit-backdrop-filter: blur(18px) saturate(130%);
+  }
+
+  .glass-subtle {
+    backdrop-filter: blur(14px) saturate(125%);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
+  }
+
+  .glass-panel-faded {
+    backdrop-filter: blur(18px) saturate(130%);
+    -webkit-backdrop-filter: blur(18px) saturate(130%);
+  }
+
+  .glass-panel-soft {
+    backdrop-filter: blur(14px) saturate(125%);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
+  }
+
+  .glass-control {
+    backdrop-filter: blur(12px) saturate(125%);
+    -webkit-backdrop-filter: blur(12px) saturate(125%);
+  }
+
   .glass-dark-faded {
     backdrop-filter: blur(24px) saturate(145%);
     -webkit-backdrop-filter: blur(24px) saturate(145%);
@@ -91,6 +138,31 @@ button {
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+  }
+
+  .glass-subtle {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+  }
+
+  .glass-panel-faded {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+  }
+
+  .glass-panel-soft {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+  }
+
+  .glass-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+  }
+
   .glass-dark-faded {
     background: rgba(2, 6, 23, 0.9);
   }
@@ -181,6 +253,18 @@ button {
   100% { transform: translateX(-100%); }
 }
 
+@keyframes bodyGradientDrift {
+  0% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
+  }
+  50% {
+    background-position: 10% 8%, 90% 10%, 56% 88%, 0% 0%;
+  }
+  100% {
+    background-position: 18% 14%, 82% 18%, 62% 80%, 0% 0%;
+  }
+}
+
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.15); }
   50% { box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); }
@@ -233,7 +317,7 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type='number'] { -moz-appearance: textfield; }
+input[type='number'] { appearance: textfield; -moz-appearance: textfield; }
 
 /* ─── Smooth transitions ─── */
 * { transition-property: color, background-color, border-color, outline-color, opacity, box-shadow, transform; transition-duration: 150ms; transition-timing-function: ease; }
@@ -270,4 +354,10 @@ input[type='number'] { -moz-appearance: textfield; }
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 600;
   letter-spacing: 0.002em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
 }

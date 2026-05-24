@@ -68,7 +68,7 @@ export function AddExpensePage() {
         <button
           type="button"
           onClick={() => (step === 'details' ? setStep('amount') : navigate(-1))}
-          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-100 text-gray-600 transition hover:bg-gray-200"
+          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75"
         >
           <ArrowLeft size={18} />
         </button>
@@ -131,7 +131,7 @@ export function AddExpensePage() {
                       'flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-sm font-medium transition-all active:scale-95',
                       paymentType === pt.key
                         ? 'border-black bg-black text-white'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400',
+                        : 'glass-control text-gray-700 hover:border-gray-400',
                     )}
                   >
                     <pt.icon size={14} />
@@ -150,16 +150,16 @@ export function AddExpensePage() {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag() } }}
                   placeholder="e.g. work, routine"
-                  className="flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-black focus:ring-2 focus:ring-black/10"
+                  className="glass-control flex-1 rounded-xl px-3 py-2 text-sm text-gray-900 outline-none focus:border-black focus:ring-2 focus:ring-black/10"
                 />
-                <button type="button" onClick={addTag} className="rounded-xl bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition">
+                <button type="button" onClick={addTag} className="glass-control rounded-xl px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-white/75">
                   Add
                 </button>
               </div>
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {tags.map((tag) => (
-                    <span key={tag} className="flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700">
+                    <span key={tag} className="glass-control flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-gray-700">
                       #{tag}
                       <button type="button" onClick={() => removeTag(tag)} className="text-gray-400 hover:text-red-500 transition">
                         <X size={10} />

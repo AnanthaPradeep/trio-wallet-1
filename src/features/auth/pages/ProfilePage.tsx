@@ -131,7 +131,7 @@ export function ProfilePage() {
                 }}
                 placeholder="Your address"
                 rows={3}
-                className="w-full resize-none rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:px-4 sm:py-3 sm:text-base"
+                className="glass-control w-full resize-none rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:px-4 sm:py-3 sm:text-base"
               />
             </div>
           </div>

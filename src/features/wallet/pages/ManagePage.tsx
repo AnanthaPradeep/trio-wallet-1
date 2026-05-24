@@ -351,7 +351,7 @@ function ManageBankAccounts() {
         ) : (
           bankAccounts.map((account) => (
             <div key={account.id} className="glass flex items-center gap-4 rounded-2xl p-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-600">
+              <div className="glass-control flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-600">
                 <Landmark size={20} />
               </div>
               <div className="min-w-0 flex-1">

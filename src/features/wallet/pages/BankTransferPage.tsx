@@ -48,7 +48,7 @@ export function BankTransferPage() {
   return (
     <div className="mx-auto w-full max-w-full space-y-5 pb-20 sm:max-w-2xl sm:space-y-6 sm:pb-24 md:max-w-2xl md:pb-10 animate-slide-up">
       <div className="flex items-center gap-4">
-        <button type="button" onClick={() => navigate(-1)} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75">
           <ArrowLeft size={18} />
         </button>
         <div>

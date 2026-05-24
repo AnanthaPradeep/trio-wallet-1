@@ -58,7 +58,7 @@ export function HistoryPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search transactions..."
-          className="w-full rounded-2xl border border-gray-200 bg-white py-3 pl-11 pr-10 text-gray-900 outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 placeholder-gray-400"
+          className="glass-control w-full rounded-2xl py-3 pl-11 pr-10 text-gray-900 outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 placeholder-gray-400"
         />
         {query && (
           <button
@@ -80,7 +80,7 @@ export function HistoryPage() {
               'flex shrink-0 items-center gap-1.5 rounded-2xl border px-3 py-1.5 text-sm font-semibold transition-all active:scale-95',
               typeFilter === f.key
                 ? 'border-black bg-black text-white shadow-md'
-                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400',
+                : 'glass-control text-gray-600 hover:border-gray-400',
             )}
           >
             <f.icon size={14} />
@@ -98,7 +98,7 @@ export function HistoryPage() {
               'shrink-0 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all',
               categoryFilter === 'all'
                 ? 'border-gray-900 bg-gray-900 text-white'
-                : 'border-gray-200 bg-white text-gray-600',
+                : 'glass-control text-gray-600',
             )}
           >
             All Categories
@@ -111,7 +111,7 @@ export function HistoryPage() {
                 'flex shrink-0 items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all',
                 categoryFilter === cat.key
                   ? `${cat.cssClass} border-current`
-                  : 'border-gray-200 bg-white text-gray-600',
+                  : 'glass-control text-gray-600',
               )}
             >
               <cat.icon size={12} />

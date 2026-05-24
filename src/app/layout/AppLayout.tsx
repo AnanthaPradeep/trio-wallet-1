@@ -194,11 +194,11 @@ export function AppLayout() {
   }, [])
 
   return (
-    <div className="relative min-h-screen bg-linear-to-br from-white via-blue-50/30 to-purple-50/30 text-gray-900">
+    <div className="relative min-h-screen bg-transparent text-gray-900">
       {/* Decorative blobs */}
-      <div className="pointer-events-none fixed -left-32 -top-32 h-96 w-96 rounded-full bg-blue-100/60 blur-3xl" />
-      <div className="pointer-events-none fixed -right-32 top-1/3 h-80 w-80 rounded-full bg-purple-100/50 blur-3xl" />
-      <div className="pointer-events-none fixed bottom-0 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full bg-pink-50/40 blur-3xl" />
+      <div className="pointer-events-none fixed -left-32 -top-32 h-96 w-96 rounded-full bg-blue-100/10 blur-xl" />
+      <div className="pointer-events-none fixed -right-32 top-1/3 h-80 w-80 rounded-full bg-purple-100/10 blur-xl" />
+      <div className="pointer-events-none fixed bottom-0 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full bg-pink-50/10 blur-xl" />
 
       {/* Top header */}
       <header className="glass-dark-faded sticky top-0 z-40 border-b border-white/10">
@@ -394,7 +394,7 @@ export function AppLayout() {
       </header>
 
       {/* Main content */}
-      <main className="relative mx-auto w-full max-w-6xl px-3 py-5 pb-24 sm:px-4 sm:py-6 sm:pb-24 md:px-6 md:py-8 md:pb-10 lg:px-8">
+      <main className="relative mx-auto w-full max-w-6xl bg-slate-950/8 px-3 py-5 pb-24 backdrop-blur-[1px] sm:bg-slate-950/10 sm:px-4 sm:py-6 sm:pb-24 md:bg-slate-950/12 md:px-6 md:py-8 md:pb-10 lg:px-8">
         <Outlet />
       </main>
 
@@ -434,7 +434,7 @@ export function AppLayout() {
       </nav>
 
       {/* Smart glass footer */}
-      <footer className="glass-dark-faded relative mt-8 overflow-hidden border-t border-white/10">
+      <footer className="glass-dark-faded relative overflow-hidden border-t border-white/10">
         <div className="pointer-events-none absolute -left-28 top-1/3 h-64 w-64 rounded-full bg-blue-900/25 blur-3xl" />
         <div className="pointer-events-none absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-cyan-900/25 blur-3xl" />
 

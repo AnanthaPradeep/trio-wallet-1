@@ -48,7 +48,7 @@ export function AddIncomePage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-100 text-gray-600 transition hover:bg-gray-200"
+          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75"
         >
           <ArrowLeft size={18} />
         </button>
@@ -89,7 +89,7 @@ export function AddIncomePage() {
                   'rounded-xl border px-3 py-2 text-sm font-semibold transition-all active:scale-95',
                   source === s
                     ? 'border-emerald-500 bg-emerald-500 text-white shadow-md'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-emerald-300',
+                    : 'glass-control text-gray-700 hover:border-emerald-300',
                 )}
               >
                 {s}

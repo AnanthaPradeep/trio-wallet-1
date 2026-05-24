@@ -59,7 +59,7 @@ export function AllocateFundsPage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-100 text-gray-600 transition hover:bg-gray-200"
+          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75"
         >
           <ArrowLeft size={18} />
         </button>

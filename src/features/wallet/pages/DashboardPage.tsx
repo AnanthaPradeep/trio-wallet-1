@@ -158,85 +158,91 @@ export function DashboardPage() {
   return (
     <div className="space-y-6 pb-20 sm:space-y-7 sm:pb-24 md:space-y-8 md:pb-10">
       {/* Hero greeting */}
-      <div className="animate-slide-up space-y-1">
+      <div className="glass-panel-soft animate-slide-up space-y-1 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <p className="text-sm text-gray-500 font-medium">{greeting}</p>
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Your Financial Overview</h1>
       </div>
 
       {/* Overall totals */}
-      <div className="animate-slide-up delay-75 space-y-2">
-        <h2 className="text-lg font-bold text-gray-900">Overall Totals</h2>
-        <p className="text-sm font-medium text-gray-500">Lifetime snapshot across all wallets and transactions.</p>
-      </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up delay-75">
-        {statCards.map((card) => (
-          <Link
-            key={card.label}
-            to={APP_ROUTES.analytics}
-            aria-label={`${card.label}: ${card.value}. ${card.description}`}
-            className="block h-full rounded-[20px] transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-          >
-            <DashboardMetricCard
-              title={card.label}
-              value={card.value}
-              description={card.description}
-              caption={card.caption}
-              badgeText={card.badgeText}
-              gradientClass={card.gradientClass}
-            />
-          </Link>
-        ))}
+      <div className="glass-panel-faded animate-slide-up delay-75 space-y-4 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
+        <div className="space-y-2">
+          <h2 className="text-lg font-bold text-gray-900">Overall Totals</h2>
+          <p className="text-sm font-medium text-gray-500">Lifetime snapshot across all wallets and transactions.</p>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {statCards.map((card) => (
+            <Link
+              key={card.label}
+              to={APP_ROUTES.analytics}
+              aria-label={`${card.label}: ${card.value}. ${card.description}`}
+              className="block h-full rounded-[20px] transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              <DashboardMetricCard
+                title={card.label}
+                value={card.value}
+                description={card.description}
+                caption={card.caption}
+                badgeText={card.badgeText}
+                gradientClass={card.gradientClass}
+              />
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* This month */}
-      <div className="animate-slide-up delay-100 space-y-2">
-        <h2 className="text-lg font-bold text-gray-900">This Month</h2>
-        <p className="text-sm font-medium text-gray-500">Current month performance and movement.</p>
-      </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up delay-100">
-        {monthlyCards.map((card) => (
-          <Link
-            key={card.label}
-            to={APP_ROUTES.analytics}
-            aria-label={`${card.label}: ${card.value}. ${card.description}`}
-            className="block h-full rounded-[20px] transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-          >
-            <DashboardMetricCard
-              title={card.label}
-              value={card.value}
-              description={card.description}
-              caption={card.caption}
-              badgeText={card.badgeText}
-              gradientClass={card.gradientClass}
-            />
-          </Link>
-        ))}
+      <div className="glass-panel-faded animate-slide-up delay-100 space-y-4 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
+        <div className="space-y-2">
+          <h2 className="text-lg font-bold text-gray-900">This Month</h2>
+          <p className="text-sm font-medium text-gray-500">Current month performance and movement.</p>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {monthlyCards.map((card) => (
+            <Link
+              key={card.label}
+              to={APP_ROUTES.analytics}
+              aria-label={`${card.label}: ${card.value}. ${card.description}`}
+              className="block h-full rounded-[20px] transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              <DashboardMetricCard
+                title={card.label}
+                value={card.value}
+                description={card.description}
+                caption={card.caption}
+                badgeText={card.badgeText}
+                gradientClass={card.gradientClass}
+              />
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Quick action chips */}
-      <div className="flex gap-2 flex-wrap animate-slide-up delay-150">
-        {[
-          { to: APP_ROUTES.addExpense,      label: '+ Expense',  color: 'bg-red-500 text-white'   },
-          { to: APP_ROUTES.addIncome,       label: '+ Pool Add', color: 'bg-emerald-500 text-white'},
-          { to: APP_ROUTES.allocateFunds,   label: 'Allocate',   color: 'bg-indigo-500 text-white' },
-          { to: APP_ROUTES.transferInternal,label: 'Transfer',   color: 'bg-blue-500 text-white'  },
-          { to: APP_ROUTES.analytics,       label: 'Analytics',  color: 'bg-gray-900 text-white'  },
-        ].map((action) => (
-          <Link
-            key={action.to}
-            to={action.to}
-            className={cn(
-              'rounded-2xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-all hover:scale-105 active:scale-95',
-              action.color,
-            )}
-          >
-            {action.label}
-          </Link>
-        ))}
+      <div className="glass-panel-soft animate-slide-up delay-150 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
+        <div className="flex flex-wrap gap-2">
+          {[
+            { to: APP_ROUTES.addExpense,      label: '+ Expense',  color: 'bg-red-500 text-white'   },
+            { to: APP_ROUTES.addIncome,       label: '+ Pool Add', color: 'bg-emerald-500 text-white'},
+            { to: APP_ROUTES.allocateFunds,   label: 'Allocate',   color: 'bg-indigo-500 text-white' },
+            { to: APP_ROUTES.transferInternal,label: 'Transfer',   color: 'bg-blue-500 text-white'  },
+            { to: APP_ROUTES.analytics,       label: 'Analytics',  color: 'bg-gray-900 text-white'  },
+          ].map((action) => (
+            <Link
+              key={action.to}
+              to={action.to}
+              className={cn(
+                'rounded-2xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-all hover:scale-105 active:scale-95',
+                action.color,
+              )}
+            >
+              {action.label}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Wallets */}
-      <div className="animate-slide-up delay-200">
+      <div className="glass-panel-faded animate-slide-up delay-200 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold text-gray-900">Wallets</h2>
           <Link to={APP_ROUTES.manage} className="text-sm font-medium text-gray-500 hover:text-gray-900 transition">
@@ -244,7 +250,7 @@ export function DashboardPage() {
           </Link>
         </div>
         {wallets.length === 0 ? (
-          <div className="glass rounded-3xl border-2 border-dashed border-gray-200 py-12 text-center">
+            <div className="glass-panel-soft rounded-3xl border-2 border-dashed border-white/65 py-12 text-center">
             <p className="text-gray-400">No wallets yet</p>
             <Link to={APP_ROUTES.manage} className="mt-2 block text-sm font-semibold text-black underline">
               Create your first wallet
@@ -266,7 +272,7 @@ export function DashboardPage() {
       </div>
 
       {/* Recent transactions */}
-      <div className="animate-slide-up delay-300">
+      <div className="glass-panel-soft animate-slide-up delay-300 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold text-gray-900">Recent Activity</h2>
           <Link to={APP_ROUTES.history} className="text-sm font-medium text-gray-500 hover:text-gray-900 transition">
