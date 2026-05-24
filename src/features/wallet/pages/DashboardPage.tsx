@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { APP_ROUTES } from '../../../shared/constants/routes'
+import { DashboardMetricCard } from '../components/DashboardMetricCard'
 import { TransactionList } from '../components/TransactionList'
 import { WalletCard } from '../components/WalletCard'
 import { useWalletApp } from '../hooks/useWalletApp'
@@ -40,6 +41,24 @@ export function DashboardPage() {
     [transactions, convertToDisplay],
   )
 
+  const monthlyBankTransfer = useMemo(
+    () =>
+      transactions
+        .filter(
+          (tx) =>
+            tx.status === 'completed' &&
+            tx.type === 'bank_transfer' &&
+            new Date(tx.createdAtIso) >= startOfMonth,
+        )
+        .reduce((sum, tx) => sum + convertToDisplay(tx.amountMinor, tx.currency), 0),
+    [transactions, convertToDisplay],
+  )
+
+  const monthlyRemaining = useMemo(
+    () => monthlyIncome - monthlyExpenses,
+    [monthlyIncome, monthlyExpenses],
+  )
+
   const totalEarnedMinor = useMemo(
     () => pools.reduce((sum, pool) => sum + convertToDisplay(pool.totalAddedMinor, pool.currency), 0),
     [pools, convertToDisplay],
@@ -52,23 +71,76 @@ export function DashboardPage() {
 
   const totalPoolMinor = useMemo(() => totalEarnedMinor - totalSpentMinor, [totalEarnedMinor, totalSpentMinor])
 
-  const allocatedTotalMinor = useMemo(
-    () => wallets.reduce((sum, wallet) => sum + convertToDisplay(wallet.balanceMinor, wallet.currency), 0),
-    [wallets, convertToDisplay],
-  )
-
-  const unallocatedTotalMinor = useMemo(
-    () => pools.reduce((sum, pool) => sum + convertToDisplay(pool.unallocatedMinor, pool.currency), 0),
-    [pools, convertToDisplay],
+  const totalTransferMinor = useMemo(
+    () =>
+      transactions
+        .filter((tx) => tx.status === 'completed' && tx.type === 'bank_transfer')
+        .reduce((sum, tx) => sum + convertToDisplay(tx.amountMinor, tx.currency), 0),
+    [transactions, convertToDisplay],
   )
 
   const statCards = [
-    { label: 'Total Pool', value: formatDisplay(totalPoolMinor, displayCurrency), tone: 'text-gray-900' },
-    { label: 'Allocated Total', value: formatDisplay(allocatedTotalMinor, displayCurrency), tone: 'text-blue-600' },
-    { label: 'Unallocated Amount', value: formatDisplay(unallocatedTotalMinor, displayCurrency), tone: 'text-amber-600' },
-    { label: 'Total Spent', value: formatDisplay(totalSpentMinor, displayCurrency), tone: 'text-red-500' },
-    { label: 'Total Earned', value: formatDisplay(totalEarnedMinor, displayCurrency), tone: 'text-emerald-600' },
-    { label: 'Wallet Count', value: String(wallets.length), tone: 'text-gray-900' },
+    {
+      label: 'Total Pool',
+      value: formatDisplay(totalPoolMinor, displayCurrency),
+      caption: `In ${displayCurrency}`,
+      badgeText: totalPoolMinor >= 0 ? '+Active' : '-Low',
+      gradientClass: 'from-blue-500 via-blue-600 to-sky-500',
+    },
+    {
+      label: 'Total Earned',
+      value: formatDisplay(totalEarnedMinor, displayCurrency),
+      caption: `In ${displayCurrency}`,
+      badgeText: '+Inflow',
+      gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
+    },
+    {
+      label: 'Total Spent',
+      value: formatDisplay(totalSpentMinor, displayCurrency),
+      caption: `In ${displayCurrency}`,
+      badgeText: '-Outflow',
+      gradientClass: 'from-rose-500 via-red-600 to-orange-500',
+    },
+    {
+      label: 'Total Transfer',
+      value: formatDisplay(totalTransferMinor, displayCurrency),
+      caption: `In ${displayCurrency}`,
+      badgeText: '+Moved',
+      gradientClass: 'from-violet-500 via-indigo-600 to-blue-500',
+    },
+  ]
+
+  const monthlyCards = [
+    {
+      label: 'Month Spent',
+      value: formatDisplay(monthlyExpenses, displayCurrency),
+      caption: 'Includes bank transfer payments',
+      badgeText: '-Outflow',
+      gradientClass: 'from-rose-500 via-red-600 to-orange-500',
+    },
+    {
+      label: 'Monthly Earned',
+      value: formatDisplay(monthlyIncome, displayCurrency),
+      caption: 'This month',
+      badgeText: '+Inflow',
+      gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
+    },
+    {
+      label: 'Monthly Remaining',
+      value: formatDisplay(Math.abs(monthlyRemaining), displayCurrency),
+      caption: monthlyRemaining >= 0 ? 'Surplus this month' : 'Deficit this month',
+      badgeText: monthlyRemaining >= 0 ? '+Surplus' : '-Deficit',
+      gradientClass: monthlyRemaining >= 0
+        ? 'from-blue-500 via-blue-600 to-cyan-500'
+        : 'from-orange-500 via-amber-600 to-yellow-500',
+    },
+    {
+      label: 'Monthly Bank Transfer',
+      value: formatDisplay(monthlyBankTransfer, displayCurrency),
+      caption: 'Wallet to bank this month',
+      badgeText: '-Bank',
+      gradientClass: 'from-violet-500 via-indigo-600 to-blue-500',
+    },
   ]
 
   const hour = now.getHours()
@@ -82,33 +154,42 @@ export function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Your Financial Overview</h1>
       </div>
 
-      {/* Core pool and wallet math */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 animate-slide-up delay-75">
+      {/* Core cards */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up delay-75">
         {statCards.map((card) => (
-          <div key={card.label} className="glass rounded-3xl p-4 sm:p-5">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">{card.label}</p>
-            <p className={cn('mt-2 text-lg font-bold sm:text-xl', card.tone)}>{card.value}</p>
-            <p className="text-xs text-gray-400 mt-0.5">In {displayCurrency}</p>
-          </div>
+          <Link
+            key={card.label}
+            to={APP_ROUTES.analytics}
+            className="block h-full transition-transform hover:scale-[1.01]"
+          >
+            <DashboardMetricCard
+              title={card.label}
+              value={card.value}
+              caption={card.caption}
+              badgeText={card.badgeText}
+              gradientClass={card.gradientClass}
+            />
+          </Link>
         ))}
       </div>
 
       {/* Monthly summary */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 animate-slide-up delay-100">
-        <div className="glass rounded-3xl p-4 sm:p-5">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Month Spent</p>
-          <p className="mt-2 text-lg font-bold text-red-500 sm:text-xl">
-            {formatDisplay(monthlyExpenses, displayCurrency)}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">This month</p>
-        </div>
-        <div className="glass rounded-3xl p-4 sm:p-5">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Month Earned</p>
-          <p className="mt-2 text-lg font-bold text-emerald-600 sm:text-xl">
-            {formatDisplay(monthlyIncome, displayCurrency)}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">This month</p>
-        </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up delay-100">
+        {monthlyCards.map((card) => (
+          <Link
+            key={card.label}
+            to={APP_ROUTES.analytics}
+            className="block h-full transition-transform hover:scale-[1.01]"
+          >
+            <DashboardMetricCard
+              title={card.label}
+              value={card.value}
+              caption={card.caption}
+              badgeText={card.badgeText}
+              gradientClass={card.gradientClass}
+            />
+          </Link>
+        ))}
       </div>
 
       {/* Quick action chips */}
