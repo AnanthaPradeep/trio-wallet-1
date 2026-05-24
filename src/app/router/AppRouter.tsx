@@ -16,6 +16,7 @@ import { InternalTransferPage } from '../../features/wallet/pages/InternalTransf
 import { ManagePage } from '../../features/wallet/pages/ManagePage'
 import { NotFoundPage } from '../../features/wallet/pages/NotFoundPage'
 import { SpendPage } from '../../features/wallet/pages/SpendPage'
+import { ProfilePage } from '../../features/auth/pages/ProfilePage'
 
 export function AppRouter() {
   return (
@@ -41,6 +42,8 @@ export function AppRouter() {
         <Route path={APP_ROUTES.bankToWallet} element={<BankToWalletPage />} />
         <Route path={APP_ROUTES.history} element={<HistoryPage />} />
         <Route path={APP_ROUTES.manage} element={<ManagePage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path={APP_ROUTES.profile} element={<ProfilePage />} />
         <Route path={APP_ROUTES.notFound} element={<NotFoundPage />} />
         <Route path="*" element={<Navigate to={APP_ROUTES.notFound} replace />} />
       </Route>

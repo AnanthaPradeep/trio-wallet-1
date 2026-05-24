@@ -12,6 +12,7 @@ import type {
   SpendInput,
   Transaction,
   TransactionStatus,
+  UpdateWalletInput,
   Wallet,
   WalletAppState,
 } from './types'
@@ -27,6 +28,7 @@ export type WalletAction =
   | { type: 'BANK_TO_WALLET'; payload: BankToWalletInput }
   | { type: 'SETTLE_TRANSACTION'; payload: { transactionId: string; status: TransactionStatus } }
   | { type: 'ADD_WALLET'; payload: AddWalletInput }
+  | { type: 'UPDATE_WALLET'; payload: UpdateWalletInput }
   | { type: 'REMOVE_WALLET'; payload: { walletId: string } }
   | { type: 'ADD_BANK_ACCOUNT'; payload: AddBankAccountInput }
   | { type: 'REMOVE_BANK_ACCOUNT'; payload: { bankAccountId: string } }
@@ -372,6 +374,48 @@ function applyExtraActions(state: WalletAppState, action: WalletAction): WalletA
     if (state.wallets.length <= 1) throw new Error('You must keep at least one wallet.')
     if (wallet.balanceMinor > 0) throw new Error('Move or spend wallet funds before removing this wallet.')
     return { ...state, wallets: state.wallets.filter((w) => w.id !== walletId) }
+  }
+
+  if (action.type === 'UPDATE_WALLET') {
+    const { walletId, name, purpose, color, balanceMinor } = action.payload
+    const existingWallet = findWallet(state.wallets, walletId)
+
+    const trimmedName = name.trim()
+    if (!trimmedName) throw new Error('Wallet name cannot be empty.')
+    if (balanceMinor !== undefined && balanceMinor < 0) throw new Error('Balance cannot be negative.')
+
+    let pools = state.pools
+    if (balanceMinor !== undefined && balanceMinor !== existingWallet.balanceMinor) {
+      const delta = balanceMinor - existingWallet.balanceMinor
+      if (delta > 0) {
+        pools = updatePool(state.pools, existingWallet.currency, (pool) => ({
+          ...pool,
+          totalAddedMinor: pool.totalAddedMinor + delta,
+          totalAllocatedMinor: pool.totalAllocatedMinor + delta,
+        }))
+      } else {
+        pools = updatePool(state.pools, existingWallet.currency, (pool) => ({
+          ...pool,
+          totalSpentMinor: pool.totalSpentMinor + Math.abs(delta),
+        }))
+      }
+    }
+
+    return {
+      ...state,
+      pools,
+      wallets: state.wallets.map((wallet) =>
+        wallet.id === walletId
+          ? {
+              ...wallet,
+              name: trimmedName,
+              purpose,
+              color,
+              balanceMinor: balanceMinor ?? wallet.balanceMinor,
+            }
+          : wallet,
+      ),
+    }
   }
 
   if (action.type === 'ADD_BANK_ACCOUNT') {

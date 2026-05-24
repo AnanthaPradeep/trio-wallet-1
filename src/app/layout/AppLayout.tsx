@@ -19,6 +19,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/analytics': 'Analytics',
   '/history': 'History',
   '/manage': 'Manage',
+  '/profile': 'Profile',
   '/allocate-funds': 'Allocate Funds',
   '/spend': 'Spend',
   '/transfer-internal': 'Transfer',
@@ -340,6 +341,13 @@ export function AppLayout() {
               {openMenu === 'user' && (
                 <div className="absolute right-0 top-full mt-2 w-44 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
                   <p className="truncate px-2 py-1 text-xs font-semibold text-gray-500">{user?.name ?? 'User'}</p>
+                  <Link
+                    to={APP_ROUTES.profile}
+                    onClick={() => setOpenMenu(null)}
+                    className="mt-1 block rounded-xl px-3 py-2 text-left text-sm font-semibold text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    My Profile
+                  </Link>
                   <button
                     type="button"
                     onClick={() => {

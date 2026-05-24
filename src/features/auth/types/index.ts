@@ -3,6 +3,10 @@ export interface AuthUser {
   name: string
   email: string
   pin?: string
+  phone?: string
+  address?: string
+  language?: string
+  defaultWalletId?: string
 }
 
 export interface StoredAuthUser extends AuthUser {
@@ -32,5 +36,6 @@ export interface AuthContextValue {
   login: (input: LoginInput) => Promise<void>
   register: (input: RegisterInput) => Promise<void>
   verifyTwoFactor: (code: string) => Promise<void>
+  updateUserProfile: (updates: Partial<Pick<AuthUser, 'name' | 'phone' | 'address' | 'language' | 'defaultWalletId'>>) => Promise<void>
   logout: () => void
 }

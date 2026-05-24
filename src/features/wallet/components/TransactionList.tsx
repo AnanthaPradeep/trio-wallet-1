@@ -1,11 +1,12 @@
 import { useMemo } from 'react'
 import { Inbox } from 'lucide-react'
 import { TransactionTile } from '../../../components/TransactionTile'
-import type { Transaction, Wallet } from '../model/types'
+import type { BankAccount, Transaction, Wallet } from '../model/types'
 
 interface TransactionListProps {
   transactions: Transaction[]
   wallets?: Wallet[]
+  bankAccounts?: BankAccount[]
   emptyMessage?: string
   onDelete?: (id: string) => void
   groupByDate?: boolean
@@ -40,6 +41,7 @@ function groupTransactionsByDate(transactions: Transaction[]): Array<{ label: st
 export function TransactionList({
   transactions,
   wallets,
+  bankAccounts,
   emptyMessage,
   onDelete,
   groupByDate = true,
@@ -48,6 +50,35 @@ export function TransactionList({
     if (!wallets) return new Map<string, string>()
     return new Map(wallets.map((w) => [w.id, w.name]))
   }, [wallets])
+
+  const bankMap = useMemo(() => {
+    if (!bankAccounts) return new Map<string, string>()
+    return new Map(bankAccounts.map((b) => [b.id, b.bankName]))
+  }, [bankAccounts])
+
+  function getRouteText(tx: Transaction): string | undefined {
+    if (tx.type === 'internal_transfer') {
+      const from = tx.fromWalletId ? walletMap.get(tx.fromWalletId) : undefined
+      const to = tx.toWalletId ? walletMap.get(tx.toWalletId) : undefined
+      if (from || to) return `${from ?? 'Wallet'} -> ${to ?? 'Wallet'}`
+      return 'Wallet -> Wallet'
+    }
+
+    if (tx.type === 'bank_transfer') {
+      const from = tx.fromWalletId ? walletMap.get(tx.fromWalletId) : undefined
+      const toBank = tx.toBankAccountId ? bankMap.get(tx.toBankAccountId) : undefined
+      if (from || toBank) return `${from ?? 'Wallet'} -> ${toBank ?? 'Bank'}`
+      return 'Wallet -> Bank'
+    }
+
+    if (tx.type === 'bank_to_wallet') {
+      const fromBank = tx.fromBankAccountId ? bankMap.get(tx.fromBankAccountId) : undefined
+      return `${fromBank ?? 'Bank'} -> Pool`
+    }
+
+    const walletId = tx.fromWalletId ?? tx.toWalletId
+    return walletId ? walletMap.get(walletId) : undefined
+  }
 
   if (!transactions.length) {
     return (
@@ -62,10 +93,9 @@ export function TransactionList({
     return (
       <div className="space-y-2 sm:space-y-2.5">
         {transactions.map((tx, i) => {
-          const walletId = tx.fromWalletId ?? tx.toWalletId
-          const walletName = walletId ? walletMap.get(walletId) : undefined
+          const routeText = getRouteText(tx)
           return (
-            <TransactionTile key={tx.id} tx={tx} walletName={walletName} onDelete={onDelete} animationDelay={i * 40} />
+            <TransactionTile key={tx.id} tx={tx} walletName={routeText} onDelete={onDelete} animationDelay={i * 40} />
           )
         })}
       </div>
@@ -85,10 +115,9 @@ export function TransactionList({
           </div>
           <div className="space-y-2">
             {group.items.map((tx, i) => {
-              const walletId = tx.fromWalletId ?? tx.toWalletId
-              const walletName = walletId ? walletMap.get(walletId) : undefined
+              const routeText = getRouteText(tx)
               return (
-                <TransactionTile key={tx.id} tx={tx} walletName={walletName} onDelete={onDelete} animationDelay={i * 40} />
+                <TransactionTile key={tx.id} tx={tx} walletName={routeText} onDelete={onDelete} animationDelay={i * 40} />
               )
             })}
           </div>

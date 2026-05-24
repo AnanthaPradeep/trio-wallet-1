@@ -14,6 +14,20 @@ function toPublicUser(user: StoredAuthUser): AuthUser {
     name: user.name,
     email: user.email,
     pin: user.pin,
+    phone: user.phone,
+    address: user.address,
+    language: user.language,
+    defaultWalletId: user.defaultWalletId,
+  }
+}
+
+function normalizeAuthUser(user: AuthUser): AuthUser {
+  return {
+    ...user,
+    phone: user.phone ?? '',
+    address: user.address ?? '',
+    language: user.language ?? 'English',
+    defaultWalletId: user.defaultWalletId,
   }
 }
 
@@ -39,8 +53,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const parsedUser = JSON.parse(storedUser) as AuthUser
+      const normalized = normalizeAuthUser(parsedUser)
       setToken(storedToken)
-      setUser(parsedUser)
+      setUser(normalized)
+      window.localStorage.setItem(STORAGE_KEYS.authUser, JSON.stringify(normalized))
     } catch {
       window.localStorage.removeItem(STORAGE_KEYS.authToken)
       window.localStorage.removeItem(STORAGE_KEYS.authUser)
@@ -139,6 +155,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(STORAGE_KEYS.authUser, JSON.stringify(publicUser))
   }
 
+  const updateUserProfile: AuthContextValue['updateUserProfile'] = async (updates) => {
+    if (!user) {
+      throw new Error('No logged in user found.')
+    }
+
+    const nextName = updates.name?.trim() ?? user.name
+    if (!nextName) {
+      throw new Error('Full name is required.')
+    }
+
+    const nextUser: AuthUser = {
+      ...user,
+      ...updates,
+      name: nextName,
+      phone: updates.phone ?? user.phone ?? '',
+      address: updates.address ?? user.address ?? '',
+      language: updates.language ?? user.language ?? 'English',
+      defaultWalletId: updates.defaultWalletId ?? user.defaultWalletId,
+    }
+
+    const users = getStoredUsers()
+    const index = users.findIndex((item) => item.id === user.id)
+    if (index === -1) {
+      throw new Error('User profile not found in storage.')
+    }
+
+    const currentStored = users[index]!
+    users[index] = {
+      ...currentStored,
+      name: nextUser.name,
+      phone: nextUser.phone,
+      address: nextUser.address,
+      language: nextUser.language,
+      defaultWalletId: nextUser.defaultWalletId,
+    }
+    saveUsers(users)
+
+    setUser(nextUser)
+    window.localStorage.setItem(STORAGE_KEYS.authUser, JSON.stringify(nextUser))
+  }
+
   const logout = () => {
     setUser(null)
     setToken(null)
@@ -157,6 +214,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       register,
       verifyTwoFactor,
+      updateUserProfile,
       logout,
     }),
     [isLoading, pendingTwoFactorEmail, token, user],

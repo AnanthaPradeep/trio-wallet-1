@@ -125,6 +125,14 @@ export interface AddWalletInput {
   color?: string
 }
 
+export interface UpdateWalletInput {
+  walletId: string
+  name: string
+  purpose: Wallet['purpose']
+  color?: string
+  balanceMinor?: number
+}
+
 export interface AddBankAccountInput {
   bankName: string
   accountHolder: string

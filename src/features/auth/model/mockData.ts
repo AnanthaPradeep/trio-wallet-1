@@ -8,6 +8,7 @@ const DEFAULT_USERS: StoredAuthUser[] = [
     email: 'anan@gmail.com',
     password: 'A12345678@',
     pin: '1234',
+    language: 'English',
   },
 ]
 

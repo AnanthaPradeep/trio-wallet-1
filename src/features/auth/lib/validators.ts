@@ -5,6 +5,7 @@ const UPPER_REGEX = /[A-Z]/
 const NUMBER_REGEX = /\d/
 const SPECIAL_REGEX = /[^A-Za-z0-9]/
 const PIN_REGEX = /^\d{4}$/
+const PHONE_REGEX = /^\+?[1-9]\d{6,14}$/
 
 export function validateEmail(email: string): string | null {
   if (!email.trim()) {
@@ -74,4 +75,20 @@ export function validateRegisterInput(input: RegisterInput): string | null {
   }
 
   return validatePin(input.pin)
+}
+
+export function validatePhone(phone?: string): string | null {
+  if (!phone?.trim()) return null
+  if (!PHONE_REGEX.test(phone.trim())) {
+    return 'Enter a valid phone number with country code if needed.'
+  }
+  return null
+}
+
+export function validateAddress(address?: string): string | null {
+  if (!address?.trim()) return null
+  if (address.trim().length > 200) {
+    return 'Address must be 200 characters or less.'
+  }
+  return null
 }

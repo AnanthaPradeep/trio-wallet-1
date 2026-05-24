@@ -15,17 +15,17 @@ interface TypeFilter {
 }
 
 const TYPE_FILTERS: TypeFilter[] = [
-  { key: 'all',               label: 'All',       icon: FolderOpen     },
-  { key: 'expense',           label: 'Expenses',  icon: TrendingDown   },
-  { key: 'income',            label: 'Income',    icon: Wallet         },
-  { key: 'allocate_to_wallet',label: 'Allocate',  icon: Wallet         },
-  { key: 'internal_transfer', label: 'Transfers', icon: ArrowLeftRight },
-  { key: 'bank_to_wallet',    label: 'Bank In',   icon: Landmark       },
-  { key: 'bank_transfer',     label: 'Bank Out',  icon: Landmark       },
+  { key: 'all',               label: 'All',              icon: FolderOpen     },
+  { key: 'expense',           label: 'Expenses',         icon: TrendingDown   },
+  { key: 'income',            label: 'Income',           icon: Wallet         },
+  { key: 'allocate_to_wallet',label: 'Allocate',         icon: Wallet         },
+  { key: 'internal_transfer', label: 'Wallet to Wallet', icon: ArrowLeftRight },
+  { key: 'bank_transfer',     label: 'Wallet to Bank',   icon: Landmark       },
+  { key: 'bank_to_wallet',    label: 'Bank to Wallet',   icon: Landmark       },
 ]
 
 export function HistoryPage() {
-  const { transactions, wallets, deleteTransaction } = useWalletApp()
+  const { transactions, wallets, bankAccounts, deleteTransaction } = useWalletApp()
   const [typeFilter, setTypeFilter] = useState<TransactionType | 'all'>('all')
   const [categoryFilter, setCategoryFilter] = useState<ExpenseCategory | 'all'>('all')
   const [query, setQuery] = useState('')
@@ -136,6 +136,7 @@ export function HistoryPage() {
       <TransactionList
         transactions={filtered}
         wallets={wallets}
+        bankAccounts={bankAccounts}
         onDelete={deleteTransaction}
         emptyMessage="No transactions match your filters."
         groupByDate

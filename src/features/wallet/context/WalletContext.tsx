@@ -13,6 +13,7 @@ import type {
   BankTransferInput,
   InternalTransferInput,
   SpendInput,
+  UpdateWalletInput,
   WalletAppState,
 } from '../model/types'
 
@@ -26,6 +27,7 @@ interface WalletContextValue extends WalletAppState {
   transferWalletToBank: (input: BankTransferInput) => void
   transferBankToWallet: (input: BankToWalletInput) => void
   addWallet: (input: AddWalletInput) => void
+  updateWallet: (input: UpdateWalletInput) => void
   removeWallet: (walletId: string) => void
   addBankAccount: (input: AddBankAccountInput) => void
   removeBankAccount: (bankAccountId: string) => void
@@ -71,6 +73,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       },
       transferBankToWallet: (input) => dispatch({ type: 'BANK_TO_WALLET', payload: input }),
       addWallet: (input) => dispatch({ type: 'ADD_WALLET', payload: input }),
+      updateWallet: (input) => dispatch({ type: 'UPDATE_WALLET', payload: input }),
       removeWallet: (walletId) => dispatch({ type: 'REMOVE_WALLET', payload: { walletId } }),
       addBankAccount: (input) => dispatch({ type: 'ADD_BANK_ACCOUNT', payload: input }),
       removeBankAccount: (bankAccountId) => dispatch({ type: 'REMOVE_BANK_ACCOUNT', payload: { bankAccountId } }),

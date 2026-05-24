@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { APP_ROUTES } from '../../../shared/constants/routes'
 import { DashboardMetricCard } from '../components/DashboardMetricCard'
 import { TransactionList } from '../components/TransactionList'
@@ -11,6 +11,7 @@ import { cn } from '../../../shared/lib/cn'
 export function DashboardPage() {
   const { wallets, pools, transactions, deleteTransaction } = useWalletApp()
   const { displayCurrency, convertToDisplay, formatDisplay } = useDisplayCurrency()
+  const navigate = useNavigate()
 
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -83,6 +84,7 @@ export function DashboardPage() {
     {
       label: 'Total Pool',
       value: formatDisplay(totalPoolMinor, displayCurrency),
+      description: 'Total earned minus total spent across all pools.',
       caption: `In ${displayCurrency}`,
       badgeText: totalPoolMinor >= 0 ? '+Active' : '-Low',
       gradientClass: 'from-blue-500 via-blue-600 to-sky-500',
@@ -90,6 +92,7 @@ export function DashboardPage() {
     {
       label: 'Total Earned',
       value: formatDisplay(totalEarnedMinor, displayCurrency),
+      description: 'Sum of all pool add amounts in every wallet currency.',
       caption: `In ${displayCurrency}`,
       badgeText: '+Inflow',
       gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
@@ -97,6 +100,7 @@ export function DashboardPage() {
     {
       label: 'Total Spent',
       value: formatDisplay(totalSpentMinor, displayCurrency),
+      description: 'Sum of all spending deducted from pools.',
       caption: `In ${displayCurrency}`,
       badgeText: '-Outflow',
       gradientClass: 'from-rose-500 via-red-600 to-orange-500',
@@ -104,6 +108,7 @@ export function DashboardPage() {
     {
       label: 'Total Transfer',
       value: formatDisplay(totalTransferMinor, displayCurrency),
+      description: 'Sum of completed wallet-to-bank transfer transactions.',
       caption: `In ${displayCurrency}`,
       badgeText: '+Moved',
       gradientClass: 'from-violet-500 via-indigo-600 to-blue-500',
@@ -114,6 +119,7 @@ export function DashboardPage() {
     {
       label: 'Month Spent',
       value: formatDisplay(monthlyExpenses, displayCurrency),
+      description: 'Completed spend, expense, and bank transfers this month.',
       caption: 'Includes bank transfer payments',
       badgeText: '-Outflow',
       gradientClass: 'from-rose-500 via-red-600 to-orange-500',
@@ -121,6 +127,7 @@ export function DashboardPage() {
     {
       label: 'Monthly Earned',
       value: formatDisplay(monthlyIncome, displayCurrency),
+      description: 'Completed income and bank-to-pool entries this month.',
       caption: 'This month',
       badgeText: '+Inflow',
       gradientClass: 'from-emerald-500 via-emerald-600 to-teal-500',
@@ -128,6 +135,7 @@ export function DashboardPage() {
     {
       label: 'Monthly Remaining',
       value: formatDisplay(Math.abs(monthlyRemaining), displayCurrency),
+      description: 'Monthly earned minus monthly spent for this period.',
       caption: monthlyRemaining >= 0 ? 'Surplus this month' : 'Deficit this month',
       badgeText: monthlyRemaining >= 0 ? '+Surplus' : '-Deficit',
       gradientClass: monthlyRemaining >= 0
@@ -137,6 +145,7 @@ export function DashboardPage() {
     {
       label: 'Monthly Bank Transfer',
       value: formatDisplay(monthlyBankTransfer, displayCurrency),
+      description: 'Completed wallet-to-bank transfers during this month.',
       caption: 'Wallet to bank this month',
       badgeText: '-Bank',
       gradientClass: 'from-violet-500 via-indigo-600 to-blue-500',
@@ -165,6 +174,7 @@ export function DashboardPage() {
             <DashboardMetricCard
               title={card.label}
               value={card.value}
+              description={card.description}
               caption={card.caption}
               badgeText={card.badgeText}
               gradientClass={card.gradientClass}
@@ -184,6 +194,7 @@ export function DashboardPage() {
             <DashboardMetricCard
               title={card.label}
               value={card.value}
+              description={card.description}
               caption={card.caption}
               badgeText={card.badgeText}
               gradientClass={card.gradientClass}
@@ -232,7 +243,13 @@ export function DashboardPage() {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {wallets.map((wallet) => (
-              <WalletCard key={wallet.id} wallet={wallet} />
+              <WalletCard
+                key={wallet.id}
+                wallet={wallet}
+                onClick={() =>
+                  navigate(APP_ROUTES.manage, { state: { editWalletId: wallet.id } })
+                }
+              />
             ))}
           </div>
         )}

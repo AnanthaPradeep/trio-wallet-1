@@ -55,9 +55,23 @@ export function WalletCard({ wallet, compact, selected, onClick }: WalletCardPro
     )
   }
 
+  const Wrapper = onClick ? 'button' : 'div'
+
   return (
-    <div
-      className="relative overflow-hidden rounded-3xl p-4 text-white shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl sm:p-5 md:p-6"
+    <Wrapper
+      {...(onClick
+        ? {
+            type: 'button' as const,
+            onClick,
+            'aria-label': `Open ${wallet.name} in manage page`,
+          }
+        : {})}
+      className={cn(
+        'relative overflow-hidden rounded-3xl p-4 text-white shadow-xl transition-all duration-300 sm:p-5 md:p-6',
+        onClick
+          ? 'cursor-pointer text-left hover:-translate-y-0.5 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70'
+          : 'hover:-translate-y-0.5 hover:shadow-2xl',
+      )}
       style={{ background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}cc 100%)` }}
     >
       <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
@@ -83,6 +97,6 @@ export function WalletCard({ wallet, compact, selected, onClick }: WalletCardPro
         <p className="text-sm font-semibold">{wallet.name}</p>
         <p className="text-xs text-white/60">{wallet.currency}</p>
       </div>
-    </div>
+    </Wrapper>
   )
 }

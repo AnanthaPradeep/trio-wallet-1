@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import type { LucideIcon } from 'lucide-react'
 import { Sun, Receipt, Plane, PiggyBank, Star, Landmark } from 'lucide-react'
 import { SUPPORTED_CURRENCIES } from '../../../shared/constants/wallet'
-import { parseMajorToMinor } from '../../../shared/lib/money'
+import { isZeroDecimal, minorToMajor, parseMajorToMinor } from '../../../shared/lib/money'
 import { useDisplayCurrency } from '../../../shared/hooks/useDisplayCurrency'
 import { Button } from '../../../shared/ui/Button'
 import { Input } from '../../../shared/ui/Input'
@@ -26,7 +27,8 @@ const WALLET_COLORS = [
 ]
 
 function ManageWallets() {
-  const { wallets, addWallet, removeWallet } = useWalletApp()
+  const location = useLocation()
+  const { wallets, addWallet, updateWallet, removeWallet } = useWalletApp()
   const { formatDisplay } = useDisplayCurrency()
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState<(typeof SUPPORTED_CURRENCIES)[number]>('INR')
@@ -36,6 +38,31 @@ function ManageWallets() {
   const [feedback, setFeedback] = useState('')
   const [isError, setIsError] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editPurpose, setEditPurpose] = useState<Wallet['purpose']>('daily')
+  const [editColor, setEditColor] = useState(WALLET_COLORS[0]!)
+  const [editBalance, setEditBalance] = useState('')
+  const consumedEditFromRouteRef = useRef(false)
+
+  function toEditableMajorString(balanceMinor: number, currencyCode: Wallet['currency']): string {
+    const major = minorToMajor(balanceMinor, currencyCode)
+    return isZeroDecimal(currencyCode) ? `${major}` : major.toFixed(2)
+  }
+
+  useEffect(() => {
+    if (consumedEditFromRouteRef.current) return
+    const walletId = (location.state as { editWalletId?: string } | null)?.editWalletId
+    if (!walletId) return
+    const wallet = wallets.find((item) => item.id === walletId)
+    if (!wallet) return
+    setEditingId(wallet.id)
+    setEditName(wallet.name)
+    setEditPurpose(wallet.purpose)
+    setEditColor(wallet.color ?? WALLET_COLORS[0]!)
+    setEditBalance(toEditableMajorString(wallet.balanceMinor, wallet.currency))
+    consumedEditFromRouteRef.current = true
+  }, [location.state, wallets])
 
   const handleAdd = (e: { preventDefault(): void }) => {
     e.preventDefault()
@@ -63,6 +90,64 @@ function ManageWallets() {
     }
   }
 
+  const handleEdit = (wallet: Wallet) => {
+    setEditingId(wallet.id)
+    setEditName(wallet.name)
+    setEditPurpose(wallet.purpose)
+    setEditColor(wallet.color ?? WALLET_COLORS[0]!)
+    setEditBalance(toEditableMajorString(wallet.balanceMinor, wallet.currency))
+    setShowForm(false)
+    setIsError(false)
+    setFeedback('')
+  }
+
+  const handleCancelEdit = () => {
+    setEditingId(null)
+    setEditName('')
+    setEditPurpose('daily')
+    setEditColor(WALLET_COLORS[0]!)
+    setEditBalance('')
+  }
+
+  const handleSaveEdit = (e: { preventDefault(): void }) => {
+    e.preventDefault()
+    if (!editingId) return
+    if (!editName.trim()) {
+      setIsError(true)
+      setFeedback('Wallet name is required.')
+      return
+    }
+    const currentWallet = wallets.find((wallet) => wallet.id === editingId)
+    if (!currentWallet) {
+      setIsError(true)
+      setFeedback('Wallet not found.')
+      return
+    }
+
+    const balanceMajor = Number(editBalance)
+    if (!Number.isFinite(balanceMajor) || balanceMajor < 0) {
+      setIsError(true)
+      setFeedback('Balance must be a valid number greater than or equal to 0.')
+      return
+    }
+
+    try {
+      updateWallet({
+        walletId: editingId,
+        name: editName.trim(),
+        purpose: editPurpose,
+        color: editColor,
+        balanceMinor: parseMajorToMinor(String(balanceMajor), currentWallet.currency),
+      })
+      setFeedback('Wallet updated!')
+      setIsError(false)
+      handleCancelEdit()
+    } catch (err) {
+      setIsError(true)
+      setFeedback(err instanceof Error ? err.message : 'Failed to update wallet.')
+    }
+  }
+
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
@@ -80,6 +165,56 @@ function ManageWallets() {
         ) : (
           wallets.map((wallet) => {
             const Icon = PURPOSE_ICON[wallet.purpose]
+            const isEditing = editingId === wallet.id
+
+            if (isEditing) {
+              return (
+                <form key={wallet.id} onSubmit={handleSaveEdit} className="glass rounded-3xl p-5 space-y-4 animate-scale-in">
+                  <p className="text-sm font-bold text-gray-700">Edit Wallet</p>
+
+                  <Input label="Wallet Name" type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="block text-sm font-medium text-gray-700">Purpose</label>
+                      <Select value={editPurpose} onChange={(e) => setEditPurpose(e.target.value as Wallet['purpose'])}>
+                        {PURPOSES.map((p) => <option key={p} value={p} className="capitalize">{p}</option>)}
+                      </Select>
+                    </div>
+                    <Input
+                      label="Current Balance"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={editBalance}
+                      onChange={(e) => setEditBalance(e.target.value)}
+                      placeholder="0.00"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-medium text-gray-700">Card Color</label>
+                    <div className="flex gap-2 flex-wrap">
+                      {WALLET_COLORS.map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => setEditColor(c)}
+                          className={cn('h-8 w-8 rounded-xl transition-all', editColor === c ? 'ring-2 ring-offset-2 ring-black scale-110' : 'hover:scale-105')}
+                          style={{ backgroundColor: c }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <Button type="submit" fullWidth>Save Changes</Button>
+                    <Button type="button" variant="secondary" fullWidth onClick={handleCancelEdit}>Cancel</Button>
+                  </div>
+                </form>
+              )
+            }
+
             return (
               <div key={wallet.id} className="glass flex items-center gap-4 rounded-2xl p-4">
                 <div
@@ -94,14 +229,23 @@ function ManageWallets() {
                     {formatDisplay(wallet.balanceMinor, wallet.currency)} · {wallet.purpose}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemove(wallet.id)}
-                  disabled={wallets.length <= 1}
-                  className="shrink-0 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-500 transition hover:bg-red-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  Remove
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(wallet)}
+                    className="shrink-0 rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-500 transition hover:bg-blue-500 hover:text-white"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(wallet.id)}
+                    disabled={wallets.length <= 1}
+                    className="shrink-0 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-500 transition hover:bg-red-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
             )
           })

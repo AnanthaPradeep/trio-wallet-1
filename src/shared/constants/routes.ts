@@ -15,6 +15,7 @@ export const APP_ROUTES = {
   bankToWallet: '/bank-to-wallet',
   history: '/history',
   manage: '/manage',
+  profile: '/profile',
   notFound: '/404',
 } as const
 
