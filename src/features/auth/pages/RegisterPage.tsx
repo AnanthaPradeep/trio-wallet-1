@@ -42,7 +42,7 @@ export function RegisterPage() {
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Account Setup</p>
           <h1 className="text-2xl font-bold text-gray-900">Create your secure account</h1>
-          <p className="text-sm text-gray-500">Register to access wallet balances and transactions safely.</p>
+          <p className="text-sm text-gray-700">Register to access wallet balances and transactions safely.</p>
         </div>
 
         <form className="mt-6 space-y-4" onSubmit={submit}>
@@ -85,11 +85,11 @@ export function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="text-xs font-medium text-gray-500 hover:text-gray-900"
+              className="text-xs font-medium text-gray-700 hover:text-gray-900"
             >
               {showPassword ? 'Hide password' : 'Show password'}
             </button>
-            <p className="text-xs text-gray-500">Use 8+ chars with uppercase, number, and symbol.</p>
+            <p className="text-xs text-gray-700">Use 8+ chars with uppercase, number, and symbol.</p>
           </div>
 
           <Input
@@ -124,7 +124,7 @@ export function RegisterPage() {
 
         {feedback ? <p className="mt-4 text-sm text-red-600">{feedback}</p> : null}
 
-        <p className="mt-6 text-sm text-gray-600">
+        <p className="mt-6 text-sm text-gray-700">
           Already have an account?{' '}
           <Link className="font-semibold text-black underline" to={APP_ROUTES.login}>
             Login

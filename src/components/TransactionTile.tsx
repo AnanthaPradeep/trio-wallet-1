@@ -22,7 +22,7 @@ const TYPE_CONFIG: Record<
   income:            { label: 'Income',   amountColor: 'text-emerald-600', amountPrefix: '+', bgColor: 'bg-emerald-50', icon: Wallet          },
   allocate_to_wallet:{ label: 'Allocate', amountColor: 'text-indigo-600',  amountPrefix: '⇢', bgColor: 'bg-indigo-50',  icon: ArrowRightLeft  },
   internal_transfer: { label: 'Wallet to Wallet', amountColor: 'text-blue-600',    amountPrefix: '⇄', bgColor: 'bg-blue-50',   icon: ArrowLeftRight  },
-  bank_transfer:     { label: 'Wallet to Bank',   amountColor: 'text-orange-500',  amountPrefix: '→', bgColor: 'bg-orange-50', icon: Landmark        },
+  bank_transfer:     { label: 'Wallet to Bank',   amountColor: 'text-violet-600',  amountPrefix: '→', bgColor: 'bg-violet-50', icon: Landmark        },
   bank_to_wallet:    { label: 'Bank to Wallet',   amountColor: 'text-emerald-600', amountPrefix: '←', bgColor: 'bg-emerald-50',icon: ArrowRightLeft  },
 }
 
@@ -79,7 +79,7 @@ export function TransactionTile({ tx, walletName, onDelete, animationDelay = 0 }
           <span
             className={cn(
               'ml-1 rounded-full px-2 py-0.5 text-xs font-medium',
-              tx.status === 'pending' && 'bg-amber-50 text-amber-600',
+              tx.status === 'pending' && 'bg-violet-50 text-violet-600',
               tx.status === 'failed' && 'bg-red-50 text-red-600',
             )}
           >

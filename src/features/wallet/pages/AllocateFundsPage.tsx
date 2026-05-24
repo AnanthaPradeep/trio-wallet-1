@@ -59,7 +59,7 @@ export function AllocateFundsPage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75"
+          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-700 transition hover:bg-white/75"
         >
           <ArrowLeft size={18} />
         </button>
@@ -92,12 +92,12 @@ export function AllocateFundsPage() {
         {selectedPool && (
           <div className="glass rounded-2xl p-4 space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Total earned</span>
+              <span className="text-gray-700">Total earned</span>
               <span className="font-semibold">{formatDisplay(selectedPool.totalAddedMinor, selectedPool.currency)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Currently unallocated</span>
-              <span className="font-bold text-amber-700">{formatDisplay(selectedPool.unallocatedMinor, selectedPool.currency)}</span>
+              <span className="text-gray-700">Currently unallocated</span>
+              <span className="font-bold text-violet-700">{formatDisplay(selectedPool.unallocatedMinor, selectedPool.currency)}</span>
             </div>
           </div>
         )}

@@ -103,7 +103,7 @@ export function DashboardPage() {
       description: 'All completed spending taken from wallets.',
       caption: `In ${displayCurrency}`,
       badgeText: '-Outflow',
-      gradientClass: 'from-rose-500 via-red-600 to-orange-500',
+      gradientClass: 'from-rose-500 via-red-600 to-fuchsia-500',
     },
     {
       label: 'Total Bank Transfers',
@@ -124,7 +124,7 @@ export function DashboardPage() {
       badgeText: monthlyRemaining >= 0 ? '+Net' : '-Net',
       gradientClass: monthlyRemaining >= 0
         ? 'from-blue-500 via-blue-600 to-cyan-500'
-        : 'from-orange-500 via-amber-600 to-yellow-500',
+        : 'from-violet-500 via-purple-600 to-indigo-500',
     },
     {
       label: 'This Month Income',
@@ -140,7 +140,7 @@ export function DashboardPage() {
       description: 'Money spent this month, including wallet spending and bank transfers.',
       caption: 'Includes bank transfers',
       badgeText: '-Outflow',
-      gradientClass: 'from-rose-500 via-red-600 to-orange-500',
+      gradientClass: 'from-rose-500 via-red-600 to-fuchsia-500',
     },
     {
       label: 'This Month Bank Transfers',
@@ -159,7 +159,7 @@ export function DashboardPage() {
     <div className="space-y-6 pb-20 sm:space-y-7 sm:pb-24 md:space-y-8 md:pb-10">
       {/* Hero greeting */}
       <div className="glass-panel-soft animate-slide-up space-y-1 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
-        <p className="text-sm text-gray-500 font-medium">{greeting}</p>
+        <p className="text-sm text-gray-700 font-medium">{greeting}</p>
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Your Financial Overview</h1>
       </div>
 
@@ -167,7 +167,7 @@ export function DashboardPage() {
       <div className="glass-panel-faded animate-slide-up delay-75 space-y-4 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <div className="space-y-2">
           <h2 className="text-lg font-bold text-gray-900">Overall Totals</h2>
-          <p className="text-sm font-medium text-gray-500">Lifetime snapshot across all wallets and transactions.</p>
+          <p className="text-sm font-medium text-gray-700">Lifetime snapshot across all wallets and transactions.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((card) => (
@@ -194,7 +194,7 @@ export function DashboardPage() {
       <div className="glass-panel-faded animate-slide-up delay-100 space-y-4 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <div className="space-y-2">
           <h2 className="text-lg font-bold text-gray-900">This Month</h2>
-          <p className="text-sm font-medium text-gray-500">Current month performance and movement.</p>
+          <p className="text-sm font-medium text-gray-700">Current month performance and movement.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {monthlyCards.map((card) => (
@@ -245,13 +245,13 @@ export function DashboardPage() {
       <div className="glass-panel-faded animate-slide-up delay-200 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold text-gray-900">Wallets</h2>
-          <Link to={APP_ROUTES.manage} className="text-sm font-medium text-gray-500 hover:text-gray-900 transition">
+          <Link to={APP_ROUTES.manage} className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
             Manage →
           </Link>
         </div>
         {wallets.length === 0 ? (
             <div className="glass-panel-soft rounded-3xl border-2 border-dashed border-white/65 py-12 text-center">
-            <p className="text-gray-400">No wallets yet</p>
+            <p className="text-gray-700">No wallets yet</p>
             <Link to={APP_ROUTES.manage} className="mt-2 block text-sm font-semibold text-black underline">
               Create your first wallet
             </Link>
@@ -275,7 +275,7 @@ export function DashboardPage() {
       <div className="glass-panel-soft animate-slide-up delay-300 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold text-gray-900">Recent Activity</h2>
-          <Link to={APP_ROUTES.history} className="text-sm font-medium text-gray-500 hover:text-gray-900 transition">
+          <Link to={APP_ROUTES.history} className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
             See all →
           </Link>
         </div>

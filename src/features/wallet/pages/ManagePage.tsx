@@ -159,7 +159,7 @@ function ManageWallets() {
 
       <div className="space-y-2">
         {wallets.length === 0 ? (
-          <div className="glass rounded-2xl border-2 border-dashed border-gray-200 py-8 text-center text-sm text-gray-400">
+          <div className="glass rounded-2xl border-2 border-dashed border-gray-200 py-8 text-center text-sm text-gray-700">
             No wallets yet. Add your first one!
           </div>
         ) : (
@@ -225,7 +225,7 @@ function ManageWallets() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-gray-900 truncate">{wallet.name}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-700">
                     {formatDisplay(wallet.balanceMinor, wallet.currency)} · {wallet.purpose}
                   </p>
                 </div>
@@ -345,18 +345,18 @@ function ManageBankAccounts() {
 
       <div className="space-y-2">
         {bankAccounts.length === 0 ? (
-          <div className="glass rounded-2xl border-2 border-dashed border-gray-200 py-8 text-center text-sm text-gray-400">
+          <div className="glass rounded-2xl border-2 border-dashed border-gray-200 py-8 text-center text-sm text-gray-700">
             No bank accounts linked yet.
           </div>
         ) : (
           bankAccounts.map((account) => (
             <div key={account.id} className="glass flex items-center gap-4 rounded-2xl p-4">
-              <div className="glass-control flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-600">
+              <div className="glass-control flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-700">
                 <Landmark size={20} />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-gray-900">{account.bankName}</p>
-                <p className="text-sm text-gray-500">{account.accountHolder} · ****{account.accountLast4} · {account.currency}</p>
+                <p className="text-sm text-gray-700">{account.accountHolder} · ****{account.accountLast4} · {account.currency}</p>
               </div>
               <button
                 type="button"
@@ -400,7 +400,7 @@ export function ManagePage() {
     <div className="space-y-8 pb-20 sm:space-y-9 sm:pb-24 md:space-y-10 md:pb-10 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Manage</h1>
-        <p className="text-sm text-gray-500">Configure your wallets and bank accounts</p>
+        <p className="text-sm text-gray-700">Configure your wallets and bank accounts</p>
       </div>
       <ManageWallets />
       <ManageBankAccounts />

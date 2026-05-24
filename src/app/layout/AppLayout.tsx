@@ -196,12 +196,12 @@ export function AppLayout() {
   return (
     <div className="relative min-h-screen bg-transparent text-gray-900">
       {/* Decorative blobs */}
-      <div className="pointer-events-none fixed -left-32 -top-32 h-96 w-96 rounded-full bg-blue-100/10 blur-xl" />
-      <div className="pointer-events-none fixed -right-32 top-1/3 h-80 w-80 rounded-full bg-purple-100/10 blur-xl" />
-      <div className="pointer-events-none fixed bottom-0 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full bg-pink-50/10 blur-xl" />
+      <div className="pointer-events-none fixed -left-36 -top-36 h-104 w-104 rounded-full bg-cyan-500/12 blur-3xl" />
+      <div className="pointer-events-none fixed -right-36 top-1/3 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="pointer-events-none fixed bottom-0 left-1/2 h-72 w-md -translate-x-1/2 rounded-full bg-indigo-500/8 blur-3xl" />
 
       {/* Top header */}
-      <header className="glass-dark-faded sticky top-0 z-40 border-b border-white/10">
+      <header className="glass-dark-elevated sticky top-0 z-40 border-b border-white/10">
         <div ref={menuRootRef} className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3 md:px-6 lg:px-8">
           {/* Left: brand */}
           <Link to={APP_ROUTES.dashboard} className="min-w-0 shrink-0">
@@ -210,7 +210,7 @@ export function AppLayout() {
                 <img src={logo1} alt="Trio Wallet logo" className="h-full w-full object-cover" />
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-medium leading-none text-slate-400">Trio Wallet</p>
+                <p className="text-xs font-medium leading-none text-slate-300">Trio Wallet</p>
                 <p className="truncate text-sm font-bold leading-tight text-white sm:text-base">
                   {isHome ? 'Smart Money' : pageTitle}
                 </p>
@@ -228,7 +228,7 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   cn(
                     'rounded-xl px-3.5 py-2 text-sm font-medium transition',
-                    isActive ? 'bg-white text-slate-900' : 'text-slate-300 hover:bg-white/10 hover:text-white',
+                    isActive ? 'bg-white text-slate-900' : 'text-slate-200 hover:bg-white/10 hover:text-white',
                   )
                 }
               >
@@ -244,7 +244,7 @@ export function AppLayout() {
                   'flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-medium transition',
                   isActionsActive || openMenu === 'actions'
                     ? 'bg-white text-slate-900'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white',
+                    : 'text-slate-200 hover:bg-white/10 hover:text-white',
                 )}
               >
                 Actions
@@ -275,7 +275,7 @@ export function AppLayout() {
                   'flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-medium transition',
                   isTransfersActive || openMenu === 'transfers'
                     ? 'bg-white text-slate-900'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white',
+                    : 'text-slate-200 hover:bg-white/10 hover:text-white',
                 )}
               >
                 Transfers
@@ -302,7 +302,7 @@ export function AppLayout() {
           {/* Right: controls */}
           <div className="flex shrink-0 items-center gap-2">
             <div className="hidden items-center gap-1.5 md:flex">
-              <Globe size={15} className="shrink-0 text-slate-400" />
+              <Globe size={15} className="shrink-0 text-slate-300" />
               <select
                 value={region.code}
                 onChange={(e) => setRegion(e.target.value)}
@@ -335,12 +335,12 @@ export function AppLayout() {
                   {initials || 'U'}
                 </div>
                 <div className="hidden max-w-24 truncate text-xs font-semibold text-slate-200 xl:block">{user?.name ?? 'User'}</div>
-                <ChevronDown size={14} className={cn('text-slate-400 transition', openMenu === 'user' ? 'rotate-180' : '')} />
+                <ChevronDown size={14} className={cn('text-slate-300 transition', openMenu === 'user' ? 'rotate-180' : '')} />
               </button>
 
               {openMenu === 'user' && (
                 <div className="glass-dark-elevated absolute right-0 top-full z-50 mt-2 w-44 rounded-2xl p-2">
-                  <p className="truncate px-2 py-1 text-xs font-semibold text-slate-400">{user?.name ?? 'User'}</p>
+                  <p className="truncate px-2 py-1 text-xs font-semibold text-slate-300">{user?.name ?? 'User'}</p>
                   <Link
                     to={APP_ROUTES.profile}
                     onClick={() => setOpenMenu(null)}
@@ -375,7 +375,7 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   cn(
                     'shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition',
-                    isActive ? 'bg-white text-slate-900' : 'text-slate-300 hover:bg-white/10 hover:text-white',
+                    isActive ? 'bg-white text-slate-900' : 'text-slate-200 hover:bg-white/10 hover:text-white',
                   )
                 }
               >
@@ -394,7 +394,7 @@ export function AppLayout() {
       </header>
 
       {/* Main content */}
-      <main className="relative mx-auto w-full max-w-6xl bg-slate-950/8 px-3 py-5 pb-24 backdrop-blur-[1px] sm:bg-slate-950/10 sm:px-4 sm:py-6 sm:pb-24 md:bg-slate-950/12 md:px-6 md:py-8 md:pb-10 lg:px-8">
+      <main className="relative mx-auto w-full max-w-6xl rounded-3xl border border-white/45 bg-white/42 px-3 py-5 pb-24 backdrop-blur-[2px] sm:px-4 sm:py-6 sm:pb-24 md:px-6 md:py-8 md:pb-10 lg:px-8">
         <Outlet />
       </main>
 
@@ -409,7 +409,7 @@ export function AppLayout() {
               className={({ isActive }) =>
                 cn(
                   'flex flex-1 flex-col items-center gap-0.5 rounded-2xl px-1 py-2 text-xs font-medium transition-all',
-                  isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200',
+                  isActive ? 'text-white' : 'text-slate-300 hover:text-slate-100',
                 )
               }
             >
@@ -447,16 +447,16 @@ export function AppLayout() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">Trio Wallet</p>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Smart pool-first money system</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Smart pool-first money system</p>
                 </div>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-slate-300">
+              <p className="max-w-xl text-sm leading-6 text-slate-200">
                 Track what you add, allocate to wallets with control, and move money across wallets and banks with a clear audit trail.
               </p>
             </div>
 
             <div className="glass-dark-soft rounded-2xl p-4 sm:p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Weekly Summary</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Weekly Summary</p>
               <p className="mt-1 text-sm font-medium text-slate-100">Get your finance pulse in one click.</p>
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
                 <Link
@@ -478,7 +478,7 @@ export function AppLayout() {
           <div className="grid gap-x-8 gap-y-8 border-b border-white/10 py-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {FOOTER_LINK_GROUPS.map((group) => (
               <div key={group.title}>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{group.title}</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">{group.title}</h3>
                 <div className="mt-3 flex flex-col gap-2.5">
                   {group.links.map((item) => (
                     <NavLink
@@ -490,7 +490,7 @@ export function AppLayout() {
                           'w-fit text-sm font-medium underline-offset-4 transition focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25',
                           isActive
                             ? 'text-white'
-                            : 'text-slate-300 hover:text-white hover:underline',
+                            : 'text-slate-200 hover:text-white hover:underline',
                         )
                       }
                     >
@@ -504,7 +504,7 @@ export function AppLayout() {
 
           <div className="grid gap-6 border-b border-white/10 py-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1fr_1fr_auto]">
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Social Media</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Social Media</h3>
               <div className="mt-3 flex flex-wrap items-center gap-2.5">
                 {SOCIAL_MEDIA_LINKS.map((social) => (
                   <a
@@ -523,18 +523,18 @@ export function AppLayout() {
             </div>
 
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Contact Details</h3>
-              <div className="mt-3 space-y-2.5 text-sm text-slate-300">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Contact Details</h3>
+              <div className="mt-3 space-y-2.5 text-sm text-slate-200">
                 <p className="flex items-center gap-2">
-                  <Mail size={14} className="shrink-0 text-slate-400" />
+                  <Mail size={14} className="shrink-0 text-slate-300" />
                   support@triowallet.app
                 </p>
                 <p className="flex items-center gap-2">
-                  <Phone size={14} className="shrink-0 text-slate-400" />
+                  <Phone size={14} className="shrink-0 text-slate-300" />
                   +91 98765 43210
                 </p>
                 <p className="flex items-start gap-2 leading-6">
-                  <MapPin size={15} className="mt-0.5 shrink-0 text-slate-400" />
+                  <MapPin size={15} className="mt-0.5 shrink-0 text-slate-300" />
                   <span>
                     Trio Wallet HQ, Brigade Tech Gardens,
                     <br />
@@ -545,7 +545,7 @@ export function AppLayout() {
             </div>
 
             <div className="md:col-span-2 lg:col-span-1">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Scan QR</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Scan QR</h3>
               <div className="mt-3 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3 shadow-sm backdrop-blur-md">
                 <div className="rounded-xl border border-white/15 bg-white p-2">
                   <QRCodeSVG
@@ -559,14 +559,14 @@ export function AppLayout() {
                 </div>
                 <div className="max-w-44">
                   <p className="text-xs font-semibold text-slate-100">Open Trio Wallet</p>
-                  <p className="mt-1 text-xs leading-5 text-slate-300">Keep this QR for app download, payment links, or future deep-link flows.</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-200">Keep this QR for app download, payment links, or future deep-link flows.</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col items-start justify-between gap-3 pt-6 sm:flex-row sm:items-center">
-            <p className="text-xs font-medium text-slate-400">© {new Date().getFullYear()} Trio Wallet. Designed for secure personal finance workflows.</p>
+            <p className="text-xs font-medium text-slate-300">© {new Date().getFullYear()} Trio Wallet. Designed for secure personal finance workflows.</p>
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 to={APP_ROUTES.manage}

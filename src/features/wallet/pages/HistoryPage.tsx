@@ -80,7 +80,7 @@ export function HistoryPage() {
               'flex shrink-0 items-center gap-1.5 rounded-2xl border px-3 py-1.5 text-sm font-semibold transition-all active:scale-95',
               typeFilter === f.key
                 ? 'border-black bg-black text-white shadow-md'
-                : 'glass-control text-gray-600 hover:border-gray-400',
+                : 'glass-control text-gray-700 hover:border-gray-400',
             )}
           >
             <f.icon size={14} />
@@ -98,7 +98,7 @@ export function HistoryPage() {
               'shrink-0 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all',
               categoryFilter === 'all'
                 ? 'border-gray-900 bg-gray-900 text-white'
-                : 'glass-control text-gray-600',
+                : 'glass-control text-gray-700',
             )}
           >
             All Categories
@@ -111,7 +111,7 @@ export function HistoryPage() {
                 'flex shrink-0 items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all',
                 categoryFilter === cat.key
                   ? `${cat.cssClass} border-current`
-                  : 'glass-control text-gray-600',
+                  : 'glass-control text-gray-700',
               )}
             >
               <cat.icon size={12} />

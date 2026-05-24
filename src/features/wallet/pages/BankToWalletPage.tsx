@@ -44,7 +44,7 @@ export function BankToWalletPage() {
   return (
     <div className="mx-auto w-full max-w-full space-y-5 pb-20 sm:max-w-2xl sm:space-y-6 sm:pb-24 md:max-w-2xl md:pb-10 animate-slide-up">
       <div className="flex items-center gap-4">
-        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75">
+        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-700 transition hover:bg-white/75">
           <ArrowLeft size={18} />
         </button>
         <div>
@@ -69,7 +69,7 @@ export function BankToWalletPage() {
         </div>
 
         <div className="glass rounded-2xl p-4">
-          <p className="text-sm text-gray-600">This deposit will be added to the {selectedBank?.currency ?? 'INR'} total pool.</p>
+          <p className="text-sm text-gray-700">This deposit will be added to the {selectedBank?.currency ?? 'INR'} total pool.</p>
         </div>
 
         <div className="glass rounded-3xl p-5">

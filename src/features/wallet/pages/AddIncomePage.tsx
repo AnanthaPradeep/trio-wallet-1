@@ -48,7 +48,7 @@ export function AddIncomePage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75"
+          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-700 transition hover:bg-white/75"
         >
           <ArrowLeft size={18} />
         </button>

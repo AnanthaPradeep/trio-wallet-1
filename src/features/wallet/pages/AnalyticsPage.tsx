@@ -19,9 +19,9 @@ const PURPOSE_ICON: Record<Wallet['purpose'], LucideIcon> = {
 function StatCard({ label, value, sub, positive }: { label: string; value: string; sub?: string; positive?: boolean }) {
   return (
     <div className="glass rounded-3xl p-5 animate-slide-up">
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-400">{label}</p>
+      <p className="text-xs font-bold uppercase tracking-widest text-gray-700">{label}</p>
       <p className={cn('mt-2 text-2xl font-bold', positive ? 'text-emerald-600' : 'text-gray-900')}>{value}</p>
-      {sub && <p className="mt-1 text-xs text-gray-500">{sub}</p>}
+      {sub && <p className="mt-1 text-xs text-gray-700">{sub}</p>}
     </div>
   )
 }
@@ -80,7 +80,7 @@ export function AnalyticsPage() {
     <div className="space-y-6 pb-20 sm:pb-24 md:pb-10 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-        <p className="text-sm text-gray-500">{monthName} overview</p>
+        <p className="text-sm text-gray-700">{monthName} overview</p>
       </div>
 
       {/* Overview cards */}
@@ -99,8 +99,8 @@ export function AnalyticsPage() {
       {categoryBreakdown.length > 0 && (
         <div className="glass rounded-3xl p-5 space-y-4 animate-slide-up delay-100">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Spending by Category</p>
-            <span className="text-xs text-gray-500">All time</span>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Spending by Category</p>
+            <span className="text-xs text-gray-700">All time</span>
           </div>
           <div className="space-y-3">
             {categoryBreakdown.map(([cat, amount]) => {
@@ -127,7 +127,7 @@ export function AnalyticsPage() {
 
       {/* Wallet balances */}
       <div className="glass rounded-3xl p-5 space-y-4 animate-slide-up delay-200">
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Wallet Balances</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Wallet Balances</p>
         <div className="space-y-3">
           {wallets.map((wallet) => {
             const Icon = PURPOSE_ICON[wallet.purpose]
@@ -146,7 +146,7 @@ export function AnalyticsPage() {
                       {formatDisplay(wallet.balanceMinor, wallet.currency)}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-400 mt-0.5">{wallet.currency}</p>
+                  <p className="text-xs text-gray-700 mt-0.5">{wallet.currency}</p>
                 </div>
               </div>
             )
@@ -156,7 +156,7 @@ export function AnalyticsPage() {
 
       {/* Activity summary */}
       <div className="glass rounded-3xl p-4 sm:p-5 animate-slide-up delay-300">
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Activity Summary</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-700 mb-4">Activity Summary</p>
         <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
           {[
             { label: 'Expenses',  count: monthlyTx.filter((t) => t.type === 'expense' || t.type === 'spend').length, color: 'text-red-500'     },
@@ -165,7 +165,7 @@ export function AnalyticsPage() {
           ].map((item) => (
             <div key={item.label}>
               <p className={cn('text-3xl font-bold', item.color)}>{item.count}</p>
-              <p className="mt-1 text-xs text-gray-500">{item.label}</p>
+              <p className="mt-1 text-xs text-gray-700">{item.label}</p>
             </div>
           ))}
         </div>

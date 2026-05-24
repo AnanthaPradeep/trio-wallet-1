@@ -68,13 +68,13 @@ export function AddExpensePage() {
         <button
           type="button"
           onClick={() => (step === 'details' ? setStep('amount') : navigate(-1))}
-          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75"
+          className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-700 transition hover:bg-white/75"
         >
           <ArrowLeft size={18} />
         </button>
         <div>
           <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Add Expense</h1>
-          <p className="text-sm text-gray-500">Step {step === 'amount' ? 1 : 2} of 2</p>
+          <p className="text-sm text-gray-700">Step {step === 'amount' ? 1 : 2} of 2</p>
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export function AddExpensePage() {
       {step === 'amount' ? (
         <div className="space-y-5">
           <div className="glass rounded-3xl p-5 space-y-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Amount</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Amount</p>
             <AmountInput
               value={amount}
               onChange={(v) => { setAmount(v); setError('') }}
@@ -96,7 +96,7 @@ export function AddExpensePage() {
           </div>
 
           <div className="space-y-2">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">From Wallet</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">From Wallet</p>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {wallets.map((w) => (
                 <WalletCard key={w.id} wallet={w} compact selected={walletId === w.id} onClick={() => { setWalletId(w.id); setError('') }} />
@@ -110,12 +110,12 @@ export function AddExpensePage() {
       ) : (
         <form onSubmit={submit} className="space-y-5">
           <div className="glass rounded-3xl p-5 space-y-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Category</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Category</p>
             <CategorySelector value={category} onChange={setCategory} />
           </div>
 
           <div className="glass rounded-3xl p-5 space-y-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Details</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Details</p>
 
             <Input label="Note (optional)" type="text" value={note} onChange={(e) => setNote(e.target.value)} placeholder="What did you spend on?" />
 

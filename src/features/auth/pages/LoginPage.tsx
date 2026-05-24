@@ -67,7 +67,7 @@ export function LoginPage() {
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-widest text-emerald-600">Secure Access</p>
           <h1 className="text-2xl font-bold text-gray-900">Login to Trio Wallet</h1>
-          <p className="text-sm text-gray-500">Use your registered account credentials to continue.</p>
+          <p className="text-sm text-gray-700">Use your registered account credentials to continue.</p>
         </div>
 
         {!pendingTwoFactorEmail ? (
@@ -99,7 +99,7 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="text-xs font-medium text-gray-500 hover:text-gray-900"
+                className="text-xs font-medium text-gray-700 hover:text-gray-900"
               >
                 {showPassword ? 'Hide password' : 'Show password'}
               </button>
@@ -123,7 +123,7 @@ export function LoginPage() {
           </form>
         ) : (
           <form className="mt-6 space-y-4" onSubmit={handleVerifyCode}>
-            <p className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+            <p className="rounded-2xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs text-indigo-700">
               2FA placeholder enabled for {pendingTwoFactorEmail}. Use demo code: 123456
             </p>
 
@@ -148,7 +148,7 @@ export function LoginPage() {
 
         {feedback ? <p className="mt-4 text-sm text-red-600">{feedback}</p> : null}
 
-        <p className="mt-6 text-sm text-gray-600">
+        <p className="mt-6 text-sm text-gray-700">
           New here?{' '}
           <Link className="font-semibold text-black underline" to={APP_ROUTES.register}>
             Create an account

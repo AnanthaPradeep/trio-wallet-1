@@ -85,7 +85,7 @@ export function ProfilePage() {
           <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
           <p className="text-sm text-gray-500">Manage your personal info and app preferences.</p>
         </div>
-        <Link to={APP_ROUTES.dashboard} className="text-sm font-semibold text-gray-600 underline hover:text-gray-900">
+        <Link to={APP_ROUTES.dashboard} className="text-sm font-semibold text-gray-700 underline hover:text-gray-900">
           Back to Dashboard
         </Link>
       </div>
@@ -180,7 +180,7 @@ export function ProfilePage() {
         <Card variant="subtle">
           <div className="space-y-2">
             <p className="text-sm font-bold text-gray-800">Security Status</p>
-            <p className="text-sm text-gray-600">Password and 2FA management will be added in the next security upgrade.</p>
+            <p className="text-sm text-gray-700">Password and 2FA management will be added in the next security upgrade.</p>
             <p className="text-xs text-gray-500">Current 2FA mode: Demo placeholder</p>
           </div>
         </Card>

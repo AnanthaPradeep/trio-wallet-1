@@ -48,23 +48,23 @@ export function BankTransferPage() {
   return (
     <div className="mx-auto w-full max-w-full space-y-5 pb-20 sm:max-w-2xl sm:space-y-6 sm:pb-24 md:max-w-2xl md:pb-10 animate-slide-up">
       <div className="flex items-center gap-4">
-        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75">
+        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-700 transition hover:bg-white/75">
           <ArrowLeft size={18} />
         </button>
         <div>
           <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Wallet to Bank</h1>
-          <p className="text-sm text-gray-500">Send funds to your bank account</p>
+          <p className="text-sm text-gray-700">Send funds to your bank account</p>
         </div>
       </div>
 
       <form onSubmit={submit} className="space-y-5">
         <div className="glass rounded-3xl p-5 space-y-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Amount</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Amount</p>
           <AmountInput value={amount} onChange={(v) => { setAmount(v); setError('') }} currency={selectedWallet?.currency ?? 'INR'} />
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">From Wallet</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-700">From Wallet</p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {wallets.map((w) => (
               <WalletCard key={w.id} wallet={w} compact selected={fromWalletId === w.id} onClick={() => { setFromWalletId(w.id); setBankAccountId(''); setError('') }} />
@@ -73,9 +73,9 @@ export function BankTransferPage() {
         </div>
 
         <div className="glass rounded-3xl p-5 space-y-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">To Bank Account</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-700">To Bank Account</p>
           {bankOptions.length === 0 ? (
-            <p className="text-sm text-gray-400">No bank accounts match this wallet's currency.</p>
+            <p className="text-sm text-gray-700">No bank accounts match this wallet's currency.</p>
           ) : (
             <Select value={bankAccountId} onChange={(e) => { setBankAccountId(e.target.value); setError('') }}>
               <option value="">Select bank account</option>
@@ -89,12 +89,12 @@ export function BankTransferPage() {
         {selectedWallet && amountMinor > 0 && (
           <div className="glass rounded-2xl p-4 space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Balance after</span>
+              <span className="text-gray-700">Balance after</span>
               <span className={`font-bold ${selectedWallet.balanceMinor - amountMinor < 0 ? 'text-red-500' : 'text-gray-900'}`}>
                 {formatDisplay(Math.max(0, selectedWallet.balanceMinor - amountMinor), selectedWallet.currency)}
               </span>
             </div>
-            <p className="text-xs text-amber-600">Bank transfers may take 1–3 business days</p>
+            <p className="text-xs text-indigo-600">Bank transfers may take 1–3 business days</p>
           </div>
         )}
 

@@ -50,23 +50,23 @@ export function InternalTransferPage() {
   return (
     <div className="mx-auto w-full max-w-full space-y-5 pb-20 sm:max-w-2xl sm:space-y-6 sm:pb-24 md:max-w-2xl md:pb-10 animate-slide-up">
       <div className="flex items-center gap-4">
-        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-600 transition hover:bg-white/75">
+        <button type="button" onClick={() => navigate(-1)} className="glass-control flex h-10 w-10 items-center justify-center rounded-2xl text-gray-700 transition hover:bg-white/75">
           <ArrowLeft size={18} />
         </button>
         <div>
           <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Transfer Money</h1>
-          <p className="text-sm text-gray-500">Move funds between your wallets</p>
+          <p className="text-sm text-gray-700">Move funds between your wallets</p>
         </div>
       </div>
 
       <form onSubmit={submit} className="space-y-5">
         <div className="glass rounded-3xl p-5 space-y-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Amount</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Amount</p>
           <AmountInput value={amount} onChange={(v) => { setAmount(v); setError('') }} currency={fromWallet?.currency ?? 'INR'} />
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">From</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-700">From</p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {wallets.map((w) => (
               <WalletCard key={w.id} wallet={w} compact selected={fromWalletId === w.id} onClick={() => { setFromWalletId(w.id); setToWalletId(''); setError('') }} />
@@ -76,9 +76,9 @@ export function InternalTransferPage() {
 
         {fromWalletId && (
           <div className="space-y-2">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">To</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">To</p>
             {toWalletOptions.length === 0 ? (
-              <div className="glass rounded-2xl p-4 text-center text-sm text-gray-400">
+              <div className="glass rounded-2xl p-4 text-center text-sm text-gray-700">
                 No compatible wallets for transfer (same currency required)
               </div>
             ) : (
@@ -93,13 +93,13 @@ export function InternalTransferPage() {
 
         {fromWallet && amountMinor > 0 && (
           <div className="glass rounded-2xl p-4 space-y-1">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Preview</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-700">Preview</p>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Current balance</span>
+              <span className="text-gray-700">Current balance</span>
               <span className="font-semibold">{formatDisplay(fromWallet.balanceMinor, fromWallet.currency)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">After transfer</span>
+              <span className="text-gray-700">After transfer</span>
               <span className={`font-bold ${balanceAfter < 0 ? 'text-red-500' : 'text-gray-900'}`}>
                 {formatDisplay(Math.max(0, balanceAfter), fromWallet.currency)}
               </span>
