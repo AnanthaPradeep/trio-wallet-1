@@ -11,6 +11,7 @@ import { useDisplayCurrency } from '../../shared/hooks/useDisplayCurrency'
 import { cn } from '../../shared/lib/cn'
 import { useAuth } from '../../features/auth/hooks/useAuth'
 import logo1 from '../../assets/logo1.png'
+import person1 from '../../assets/person11.png'
 
 const PAGE_TITLES: Record<string, string> = {
   '/': 'Dashboard',
@@ -186,19 +187,8 @@ export function AppLayout() {
     .map((part) => part[0]?.toUpperCase())
     .join('')
 
-  const [openMenu, setOpenMenu] = useState<'actions' | 'transfers' | 'user' | null>(null)
+  const [openMenu, setOpenMenu] = useState<'user' | null>(null)
   const menuRootRef = useRef<HTMLDivElement | null>(null)
-
-  const isActionsActive =
-    location.pathname === APP_ROUTES.addIncome ||
-    location.pathname === APP_ROUTES.addExpense ||
-    location.pathname === APP_ROUTES.allocateFunds ||
-    location.pathname === APP_ROUTES.manage
-
-  const isTransfersActive =
-    location.pathname === APP_ROUTES.transferInternal ||
-    location.pathname === APP_ROUTES.transferBank ||
-    location.pathname === APP_ROUTES.bankToWallet
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -228,7 +218,7 @@ export function AppLayout() {
       <div className="pointer-events-none fixed bottom-0 left-1/2 h-72 w-md -translate-x-1/2 rounded-full bg-indigo-500/8 blur-3xl" />
 
       {/* Top header */}
-      <header className="glass-dark-elevated sticky top-0 z-40 border-b border-white/10">
+      <header className="sticky top-0 z-40 border-b border-white/12 bg-linear-to-r from-slate-950/88 via-blue-950/78 to-blue-900/66 shadow-[0_18px_40px_rgba(2,6,23,0.25)] backdrop-blur-xl">
         <div ref={menuRootRef} className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3 md:px-6 lg:px-8">
           {/* Left: brand */}
           <Link to={APP_ROUTES.dashboard} className="min-w-0 shrink-0">
@@ -247,7 +237,7 @@ export function AppLayout() {
 
           {/* Center: desktop nav */}
           <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
-            {DESKTOP_PRIMARY_LINKS.map((item) => (
+            {DESKTOP_PRIMARY_LINKS.slice(0, 4).map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
@@ -262,78 +252,16 @@ export function AppLayout() {
                 {item.label}
               </NavLink>
             ))}
-
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setOpenMenu((prev) => (prev === 'actions' ? null : 'actions'))}
-                className={cn(
-                  'flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-medium transition',
-                  isActionsActive || openMenu === 'actions'
-                    ? 'bg-white text-slate-900'
-                    : 'text-slate-200 hover:bg-white/10 hover:text-white',
-                )}
-              >
-                Actions
-                <ChevronDown size={16} className={cn('transition', openMenu === 'actions' ? 'rotate-180' : '')} />
-              </button>
-
-              {openMenu === 'actions' && (
-                <div className="glass-dark-elevated absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl p-2">
-                  {ACTION_MENU_LINKS.map((item) => (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setOpenMenu(null)}
-                      className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setOpenMenu((prev) => (prev === 'transfers' ? null : 'transfers'))}
-                className={cn(
-                  'flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-medium transition',
-                  isTransfersActive || openMenu === 'transfers'
-                    ? 'bg-white text-slate-900'
-                    : 'text-slate-200 hover:bg-white/10 hover:text-white',
-                )}
-              >
-                Transfers
-                <ChevronDown size={16} className={cn('transition', openMenu === 'transfers' ? 'rotate-180' : '')} />
-              </button>
-
-              {openMenu === 'transfers' && (
-                <div className="glass-dark-elevated absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl p-2">
-                  {TRANSFER_MENU_LINKS.map((item) => (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setOpenMenu(null)}
-                      className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
           </nav>
 
           {/* Right: controls */}
           <div className="flex shrink-0 items-center gap-2">
-            <div className="hidden items-center gap-1.5 md:flex">
-              <Globe size={15} className="shrink-0 text-slate-300" />
+            <div className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-slate-900/55 px-2 py-1.5">
+              <Globe size={13} className="shrink-0 text-slate-300" />
               <select
                 value={region.code}
                 onChange={(e) => setRegion(e.target.value)}
-                className="rounded-xl border border-white/15 bg-slate-900/65 px-2 py-1.5 text-[11px] font-semibold text-slate-200 outline-none focus:border-white/35 focus:ring-2 focus:ring-white/15 xl:px-2.5 xl:py-2 xl:text-xs"
+                className="w-26 border-none bg-transparent text-[11px] font-semibold text-slate-100 outline-none sm:w-30 sm:text-xs md:w-40"
               >
                 {G20_REGIONS.map((r) => (
                   <option key={r.code} value={r.code}>{r.symbol} {r.name}</option>
@@ -343,7 +271,7 @@ export function AppLayout() {
 
             <Link
               to={APP_ROUTES.addIncome}
-              className="hidden items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-200 lg:inline-flex"
+              className="hidden items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-200 md:inline-flex"
             >
               <Plus size={14} />
               Pool Add
@@ -420,8 +348,70 @@ export function AppLayout() {
         </div>
       </header>
 
+      {/* Hero section */}
+      <section className="relative mx-auto mt-4 w-full max-w-6xl rounded-3xl border border-white/45 bg-white/42 p-3 sm:p-4 md:p-6 lg:p-8">
+        <div className="relative min-h-72 overflow-hidden rounded-3xl sm:min-h-80 md:min-h-88 lg:min-h-96">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(16,185,129,0.24),transparent_50%),radial-gradient(circle_at_80%_18%,rgba(99,102,241,0.24),transparent_50%),radial-gradient(circle_at_56%_86%,rgba(45,212,191,0.14),transparent_56%),linear-gradient(to_right,rgba(15,23,42,0.94),rgba(55,48,163,0.72),rgba(14,116,144,0.62))]" />
+
+          <div className="relative z-10 grid grid-cols-[minmax(0,1.14fr)_minmax(0,0.86fr)] items-stretch gap-3 p-4 sm:gap-4 sm:p-5 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-6 md:p-6 lg:gap-8 lg:p-8">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-200/90">Control Center</p>
+              <h2 className="mt-1.5 text-xl font-semibold leading-tight text-white sm:text-2xl lg:text-3xl">
+                Move money with clarity and speed
+              </h2>
+              <p className="mt-1.5 max-w-xl text-xs leading-5 text-slate-100/90 sm:text-sm sm:leading-6">
+                Keep the header clean while actions, transfers, and region currency controls stay in one focused section.
+              </p>
+
+              <div className="mt-3 flex flex-col gap-1.5 sm:mt-4">
+                <p className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-200/90 sm:text-xs">
+                  Quick Actions
+                </p>
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  {ACTION_MENU_LINKS.map((item) => (
+                    <Link
+                      key={`hero-action-${item.to}`}
+                      to={item.to}
+                      className="rounded-full border border-white/25 bg-white/12 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md transition hover:bg-white/22 sm:px-3.5 sm:py-1.5 sm:text-xs"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+
+                <p className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-200/90 sm:text-xs">
+                  Transfers
+                </p>
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  {TRANSFER_MENU_LINKS.map((item) => (
+                    <Link
+                      key={`hero-transfer-${item.to}`}
+                      to={item.to}
+                      className="rounded-full border border-white/25 bg-slate-900/35 px-2.5 py-1 text-[11px] font-semibold text-slate-100 backdrop-blur-md transition hover:bg-slate-800/55 sm:px-3.5 sm:py-1.5 sm:text-xs"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="relative h-full min-h-56 overflow-hidden sm:min-h-64 md:min-h-72 lg:min-h-80">
+              <div className="absolute inset-0 flex items-end justify-end p-1 sm:p-1.5 md:p-2">
+                <img
+                  src={person1}
+                  alt=""
+                  aria-hidden="true"
+                  className="block h-[90%] w-auto max-w-[108%] sm:h-[94%] sm:max-w-[112%] md:h-[98%] md:max-w-[116%] lg:h-full lg:max-w-[120%]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Main content */}
-      <main className="relative mx-auto w-full max-w-6xl rounded-3xl border border-white/45 bg-white/42 px-3 py-5 pb-24 backdrop-blur-[2px] sm:px-4 sm:py-6 sm:pb-24 md:px-6 md:py-8 md:pb-10 lg:px-8">
+      <main className="relative mx-auto mt-5 w-full max-w-6xl rounded-3xl border border-white/45 bg-white/42 px-3 py-5 pb-24 backdrop-blur-[2px] sm:px-4 sm:py-6 sm:pb-24 md:mt-6 md:px-6 md:py-8 md:pb-10 lg:px-8">
         <Outlet />
       </main>
 
@@ -461,9 +451,9 @@ export function AppLayout() {
       </nav>
 
       {/* Smart glass footer */}
-      <footer className="glass-dark-faded relative overflow-hidden border-t border-white/10">
-        <div className="pointer-events-none absolute -left-28 top-1/3 h-64 w-64 rounded-full bg-blue-900/25 blur-3xl" />
-        <div className="pointer-events-none absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-cyan-900/25 blur-3xl" />
+      <footer className="relative overflow-hidden border-t border-white/12 bg-linear-to-r from-slate-950/92 via-blue-950/84 to-blue-900/72 shadow-[0_-18px_40px_rgba(2,6,23,0.22)]">
+        <div className="pointer-events-none absolute -left-28 top-1/3 h-64 w-64 rounded-full bg-blue-400/14 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-cyan-300/12 blur-3xl" />
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 md:py-12 lg:px-8">
           <div className="grid gap-6 border-b border-white/10 pb-8 md:gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-end">
@@ -482,9 +472,9 @@ export function AppLayout() {
               </p>
             </div>
 
-            <div className="glass-dark-soft rounded-2xl p-4 sm:p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Weekly Summary</p>
-              <p className="mt-1 text-sm font-medium text-slate-100">Get your finance pulse in one click.</p>
+            <div className="rounded-2xl border border-white/10 bg-white/6 p-4 shadow-sm backdrop-blur-md sm:p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-200">Weekly Summary</p>
+              <p className="mt-1 text-sm font-medium text-white">Get your finance pulse in one click.</p>
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
                 <Link
                   to={APP_ROUTES.analytics}
@@ -505,7 +495,7 @@ export function AppLayout() {
           <div className="grid gap-x-8 gap-y-8 border-b border-white/10 py-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {FOOTER_LINK_GROUPS.map((group) => (
               <div key={group.title}>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">{group.title}</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-200">{group.title}</h3>
                 <div className="mt-3 flex flex-col gap-2.5">
                   {group.links.map((item) => (
                     <NavLink
@@ -517,7 +507,7 @@ export function AppLayout() {
                           'w-fit text-sm font-medium underline-offset-4 transition focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25',
                           isActive
                             ? 'text-white'
-                            : 'text-slate-200 hover:text-white hover:underline',
+                            : 'text-slate-100 hover:text-white hover:underline',
                         )
                       }
                     >
@@ -531,7 +521,7 @@ export function AppLayout() {
 
           <div className="grid gap-6 border-b border-white/10 py-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1fr_1fr_auto]">
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Social Media</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-200">Social Media</h3>
               <div className="mt-3 flex flex-wrap items-center gap-2.5">
                 {SOCIAL_MEDIA_LINKS.map((social) => (
                   <a
@@ -550,18 +540,18 @@ export function AppLayout() {
             </div>
 
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Contact Details</h3>
-              <div className="mt-3 space-y-2.5 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-200">Contact Details</h3>
+              <div className="mt-3 space-y-2.5 text-sm text-slate-100">
                 <p className="flex items-center gap-2">
-                  <Mail size={14} className="shrink-0 text-slate-300" />
+                  <Mail size={14} className="shrink-0 text-slate-200" />
                   support@triowallet.app
                 </p>
                 <p className="flex items-center gap-2">
-                  <Phone size={14} className="shrink-0 text-slate-300" />
+                  <Phone size={14} className="shrink-0 text-slate-200" />
                   +91 98765 43210
                 </p>
                 <p className="flex items-start gap-2 leading-6">
-                  <MapPin size={15} className="mt-0.5 shrink-0 text-slate-300" />
+                  <MapPin size={15} className="mt-0.5 shrink-0 text-slate-200" />
                   <span>
                     Trio Wallet HQ, Brigade Tech Gardens,
                     <br />
@@ -572,8 +562,8 @@ export function AppLayout() {
             </div>
 
             <div className="md:col-span-2 lg:col-span-1">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Scan QR</h3>
-              <div className="mt-3 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3 shadow-sm backdrop-blur-md">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-200">Scan QR</h3>
+              <div className="mt-3 inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-white/8 p-3 shadow-sm backdrop-blur-md">
                 <div className="rounded-xl border border-white/15 bg-white p-2">
                   <QRCodeSVG
                     value={FOOTER_QR_VALUE}
@@ -585,25 +575,25 @@ export function AppLayout() {
                   />
                 </div>
                 <div className="max-w-44">
-                  <p className="text-xs font-semibold text-slate-100">Open Trio Wallet</p>
-                  <p className="mt-1 text-xs leading-5 text-slate-200">Keep this QR for app download, payment links, or future deep-link flows.</p>
+                  <p className="text-xs font-semibold text-white">Open Trio Wallet</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-100">Keep this QR for app download, payment links, or future deep-link flows.</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col items-start justify-between gap-3 pt-6 sm:flex-row sm:items-center">
-            <p className="text-xs font-medium text-slate-300">© {new Date().getFullYear()} Trio Wallet. Designed for secure personal finance workflows.</p>
+            <p className="text-xs font-medium text-slate-200">© {new Date().getFullYear()} Trio Wallet. Designed for secure personal finance workflows.</p>
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 to={APP_ROUTES.manage}
-                className="rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-slate-200 backdrop-blur-md transition hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+                className="rounded-xl border border-white/15 bg-white/8 px-3.5 py-2 text-xs font-semibold text-slate-100 backdrop-blur-md transition hover:bg-white/16 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
               >
                 Preferences
               </Link>
               <Link
                 to={APP_ROUTES.allocateFunds}
-                className="rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-slate-200 backdrop-blur-md transition hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+                className="rounded-xl border border-white/15 bg-white/8 px-3.5 py-2 text-xs font-semibold text-slate-100 backdrop-blur-md transition hover:bg-white/16 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
               >
                 Allocate Now
               </Link>
