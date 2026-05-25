@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // GitHub Pages SPA redirect: preserve the full path and query string
+      var l = window.location;
+      var base = '/trio-wallet-1';
+      var path = l.pathname.slice(base.length) || '/';
+      var search = l.search ? '?q=' + encodeURIComponent(l.search.slice(1)) : '';
+      var hash = l.hash ? '&h=' + encodeURIComponent(l.hash.slice(1)) : '';
+      l.replace(base + '/?p=' + encodeURIComponent(path) + search + hash);
+    </script>
+  </head>
+  <body></body>
+</html>
