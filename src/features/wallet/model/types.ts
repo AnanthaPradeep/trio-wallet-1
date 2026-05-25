@@ -48,6 +48,7 @@ export type TransactionType =
   | 'bank_transfer'
   | 'bank_to_wallet'
   | 'allocate_to_wallet'
+  | 'goal_contribution'
 
 export type TransactionStatus = 'completed' | 'pending' | 'failed'
 
@@ -146,9 +147,89 @@ export interface BankToWalletInput {
   note: string
 }
 
+export interface Budget {
+  id: string
+  name: string
+  category: ExpenseCategory | 'all'
+  limitMinor: number
+  currency: CurrencyCode
+  alertThreshold: number
+  createdAtIso: string
+}
+
+export interface AddBudgetInput {
+  name: string
+  category: ExpenseCategory | 'all'
+  limitMinor: number
+  currency: CurrencyCode
+  alertThreshold?: number
+}
+
+export interface Goal {
+  id: string
+  name: string
+  targetAmountMinor: number
+  savedAmountMinor: number
+  currency: CurrencyCode
+  deadline?: string
+  color?: string
+  isCompleted: boolean
+  createdAtIso: string
+}
+
+export interface AddGoalInput {
+  name: string
+  targetAmountMinor: number
+  currency: CurrencyCode
+  deadline?: string
+  color?: string
+}
+
+export interface ContributeToGoalInput {
+  goalId: string
+  walletId: string
+  amountMinor: number
+}
+
+export type RecurringFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly'
+
+export interface RecurringRule {
+  id: string
+  name: string
+  type: 'expense' | 'income'
+  frequency: RecurringFrequency
+  amountMinor: number
+  currency: CurrencyCode
+  walletId?: string
+  category?: ExpenseCategory
+  paymentType?: PaymentType
+  source?: string
+  note: string
+  nextDueIso: string
+  isActive: boolean
+  createdAtIso: string
+}
+
+export interface AddRecurringRuleInput {
+  name: string
+  type: 'expense' | 'income'
+  frequency: RecurringFrequency
+  amountMinor: number
+  currency: CurrencyCode
+  walletId?: string
+  category?: ExpenseCategory
+  paymentType?: PaymentType
+  source?: string
+  note: string
+  startDateIso: string
+}
+
 export interface WalletAppState {
   pools: CurrencyPool[]
   wallets: Wallet[]
   bankAccounts: BankAccount[]
   transactions: Transaction[]
+  budgets: Budget[]
+  recurringRules: RecurringRule[]
+  goals: Goal[]
 }

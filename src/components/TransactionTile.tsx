@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import type { LucideIcon } from 'lucide-react'
-import { TrendingDown, Wallet, ArrowLeftRight, Landmark, ArrowRightLeft } from 'lucide-react'
+import {
+  TrendingDown, Wallet, ArrowLeftRight, Landmark, ArrowRightLeft,
+  Minus, Plus, MoveRight, ArrowRight, ArrowLeft, Target,
+} from 'lucide-react'
 import { getCategoryMeta } from '../features/wallet/model/categories'
 import type { Transaction } from '../features/wallet/model/types'
 import { useDisplayCurrency } from '../shared/hooks/useDisplayCurrency'
@@ -15,15 +18,16 @@ interface TransactionTileProps {
 
 const TYPE_CONFIG: Record<
   string,
-  { label: string; amountColor: string; amountPrefix: string; bgColor: string; icon: LucideIcon }
+  { label: string; amountColor: string; amountIcon: LucideIcon; bgColor: string; icon: LucideIcon }
 > = {
-  expense:           { label: 'Expense',  amountColor: 'text-red-500',     amountPrefix: '−', bgColor: 'bg-red-50',     icon: TrendingDown    },
-  spend:             { label: 'Spend',    amountColor: 'text-red-500',     amountPrefix: '−', bgColor: 'bg-red-50',     icon: TrendingDown    },
-  income:            { label: 'Income',   amountColor: 'text-emerald-600', amountPrefix: '+', bgColor: 'bg-emerald-50', icon: Wallet          },
-  allocate_to_wallet:{ label: 'Allocate', amountColor: 'text-indigo-600',  amountPrefix: '⇢', bgColor: 'bg-indigo-50',  icon: ArrowRightLeft  },
-  internal_transfer: { label: 'Wallet to Wallet', amountColor: 'text-blue-600',    amountPrefix: '⇄', bgColor: 'bg-blue-50',   icon: ArrowLeftRight  },
-  bank_transfer:     { label: 'Wallet to Bank',   amountColor: 'text-violet-600',  amountPrefix: '→', bgColor: 'bg-violet-50', icon: Landmark        },
-  bank_to_wallet:    { label: 'Bank to Wallet',   amountColor: 'text-emerald-600', amountPrefix: '←', bgColor: 'bg-emerald-50',icon: ArrowRightLeft  },
+  expense:           { label: 'Expense',         amountColor: 'text-red-500',     amountIcon: Minus,      bgColor: 'bg-red-50',     icon: TrendingDown   },
+  spend:             { label: 'Spend',            amountColor: 'text-red-500',     amountIcon: Minus,      bgColor: 'bg-red-50',     icon: TrendingDown   },
+  income:            { label: 'Income',           amountColor: 'text-emerald-600', amountIcon: Plus,       bgColor: 'bg-emerald-50', icon: Wallet         },
+  allocate_to_wallet:{ label: 'Allocate',         amountColor: 'text-indigo-600',  amountIcon: MoveRight,  bgColor: 'bg-indigo-50',  icon: ArrowRightLeft },
+  internal_transfer: { label: 'Wallet to Wallet', amountColor: 'text-blue-600',    amountIcon: ArrowLeftRight, bgColor: 'bg-blue-50', icon: ArrowLeftRight },
+  bank_transfer:     { label: 'Wallet to Bank',   amountColor: 'text-violet-600',  amountIcon: ArrowRight, bgColor: 'bg-violet-50',  icon: Landmark       },
+  bank_to_wallet:    { label: 'Bank to Wallet',   amountColor: 'text-emerald-600', amountIcon: ArrowLeft,  bgColor: 'bg-emerald-50', icon: ArrowRightLeft },
+  goal_contribution: { label: 'Goal Contribution', amountColor: 'text-violet-600',  amountIcon: Target,     bgColor: 'bg-violet-50',  icon: Target          },
 }
 
 export function TransactionTile({ tx, walletName, onDelete, animationDelay = 0 }: TransactionTileProps) {
@@ -69,8 +73,9 @@ export function TransactionTile({ tx, walletName, onDelete, animationDelay = 0 }
 
         {/* Amount + time */}
         <div className="text-right shrink-0">
-          <p className={cn('text-sm font-bold', config.amountColor)}>
-            {config.amountPrefix} {formatDisplay(tx.amountMinor, tx.currency)}
+          <p className={cn('flex items-center justify-end gap-0.5 text-sm font-bold', config.amountColor)}>
+            <config.amountIcon size={12} strokeWidth={2.5} />
+            {formatDisplay(tx.amountMinor, tx.currency)}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">{timeStr}</p>
         </div>

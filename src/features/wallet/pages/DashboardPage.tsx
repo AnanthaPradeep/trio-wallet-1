@@ -7,9 +7,28 @@ import { useWalletApp } from '../hooks/useWalletApp'
 import { useDisplayCurrency } from '../../../shared/hooks/useDisplayCurrency'
 import { useMemo } from 'react'
 import { cn } from '../../../shared/lib/cn'
+import { getCategoryMeta } from '../model/categories'
+import { formatMinor } from '../../../shared/lib/money'
+import { AlertTriangle, Layers, RefreshCw, Target } from 'lucide-react'
+import type { Budget, Transaction } from '../model/types'
+
+function computeMonthlySpent(budget: Budget, transactions: Transaction[]): number {
+  const now = new Date()
+  return transactions
+    .filter(
+      (tx) =>
+        (tx.type === 'expense' || tx.type === 'spend') &&
+        tx.status === 'completed' &&
+        tx.currency === budget.currency &&
+        (budget.category === 'all' || tx.category === budget.category) &&
+        new Date(tx.createdAtIso).getMonth() === now.getMonth() &&
+        new Date(tx.createdAtIso).getFullYear() === now.getFullYear(),
+    )
+    .reduce((sum, tx) => sum + tx.amountMinor, 0)
+}
 
 export function DashboardPage() {
-  const { wallets, pools, transactions, deleteTransaction } = useWalletApp()
+  const { wallets, pools, transactions, budgets, recurringRules, goals, deleteTransaction } = useWalletApp()
   const { displayCurrency, convertToDisplay, formatDisplay } = useDisplayCurrency()
   const navigate = useNavigate()
 
@@ -152,6 +171,41 @@ export function DashboardPage() {
     },
   ]
 
+  const upcomingRules = useMemo(() => {
+    const in7days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+    return (recurringRules ?? [])
+      .filter((r) => r.isActive && new Date(r.nextDueIso) <= in7days)
+      .sort((a, b) => new Date(a.nextDueIso).getTime() - new Date(b.nextDueIso).getTime())
+      .slice(0, 4)
+  }, [recurringRules])
+
+  const budgetAlerts = useMemo(
+    () =>
+      (budgets ?? [])
+        .map((budget) => {
+          const spentMinor = computeMonthlySpent(budget, transactions)
+          const pct = budget.limitMinor > 0 ? Math.round((spentMinor / budget.limitMinor) * 100) : 0
+          return { budget, spentMinor, pct }
+        })
+        .filter(({ pct, budget }) => pct >= budget.alertThreshold)
+        .slice(0, 3),
+    [budgets, transactions],
+  )
+
+  const myGoals = useMemo(
+    () =>
+      (goals ?? [])
+        .filter((g) => !g.isCompleted)
+        .sort((a, b) => {
+          if (!a.deadline && !b.deadline) return 0
+          if (!a.deadline) return 1
+          if (!b.deadline) return -1
+          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+        })
+        .slice(0, 3),
+    [goals],
+  )
+
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
@@ -226,6 +280,9 @@ export function DashboardPage() {
             { to: APP_ROUTES.allocateFunds,   label: 'Allocate',   color: 'bg-indigo-500 text-white' },
             { to: APP_ROUTES.transferInternal,label: 'Transfer',   color: 'bg-blue-500 text-white'  },
             { to: APP_ROUTES.analytics,       label: 'Analytics',  color: 'bg-gray-900 text-white'  },
+          { to: APP_ROUTES.budgets,         label: 'Budgets',    color: 'bg-violet-500 text-white' },
+          { to: APP_ROUTES.recurring,       label: 'Recurring',  color: 'bg-sky-500 text-white'    },
+          { to: APP_ROUTES.goals,           label: 'Goals',      color: 'bg-teal-500 text-white'   },
           ].map((action) => (
             <Link
               key={action.to}
@@ -240,6 +297,138 @@ export function DashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* Upcoming recurring */}
+      {upcomingRules.length > 0 && (
+        <div className="glass-panel-soft animate-slide-up delay-200 rounded-3xl px-4 py-4 sm:px-5 sm:py-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">Upcoming</h2>
+            <Link to={APP_ROUTES.recurring} className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
+              Manage →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {upcomingRules.map((rule) => {
+              const catMeta = rule.category ? getCategoryMeta(rule.category) : null
+              const dueDate = new Date(rule.nextDueIso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
+              const isExpense = rule.type === 'expense'
+              return (
+                <Link
+                  key={rule.id}
+                  to={APP_ROUTES.recurring}
+                  className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 transition hover:bg-white/80"
+                >
+                  <div className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl', isExpense ? 'bg-red-50' : 'bg-emerald-50')}>
+                    {catMeta
+                      ? <catMeta.icon size={16} className={isExpense ? 'text-red-500' : 'text-emerald-600'} />
+                      : <RefreshCw size={16} className="text-sky-500" />
+                    }
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{rule.name}</p>
+                    <p className="text-xs text-gray-500 capitalize">{rule.frequency}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className={cn('text-sm font-bold', isExpense ? 'text-red-500' : 'text-emerald-600')}>
+                      {isExpense ? '-' : '+'}{formatMinor(rule.amountMinor, rule.currency)}
+                    </p>
+                    <p className="text-xs text-gray-400">{dueDate}</p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Budget Alerts */}
+      {budgetAlerts.length > 0 && (
+        <div className="glass-panel-soft animate-slide-up delay-200 rounded-3xl px-4 py-4 sm:px-5 sm:py-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">Budget Alerts</h2>
+            <Link to={APP_ROUTES.budgets} className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
+              View all →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {budgetAlerts.map(({ budget, spentMinor, pct }) => {
+              const catMeta = budget.category !== 'all' ? getCategoryMeta(budget.category) : null
+              const isOver = spentMinor > budget.limitMinor
+              return (
+                <Link
+                  key={budget.id}
+                  to={APP_ROUTES.budgets}
+                  className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 transition hover:bg-white/80"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100">
+                    {catMeta ? <catMeta.icon size={16} className="text-gray-600" /> : <Layers size={16} className="text-indigo-500" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{budget.name}</p>
+                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div
+                        className={cn('h-full rounded-full', isOver ? 'bg-red-500' : 'bg-amber-400')}
+                        style={{ width: `${Math.min(pct, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-xs font-bold text-gray-900">{formatMinor(spentMinor, budget.currency)} / {formatMinor(budget.limitMinor, budget.currency)}</p>
+                    <p className={cn('text-xs font-semibold flex items-center justify-end gap-0.5', isOver ? 'text-red-500' : 'text-amber-600')}>
+                      <AlertTriangle size={10} />
+                      {isOver ? 'Over budget' : `${pct}% used`}
+                    </p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* My Goals */}
+      {myGoals.length > 0 && (
+        <div className="glass-panel-soft animate-slide-up delay-200 rounded-3xl px-4 py-4 sm:px-5 sm:py-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">My Goals</h2>
+            <Link to={APP_ROUTES.goals} className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
+              View all →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {myGoals.map((goal) => {
+              const pct = goal.targetAmountMinor > 0
+                ? Math.min(Math.round((goal.savedAmountMinor / goal.targetAmountMinor) * 100), 100)
+                : 0
+              const accentColor = goal.color ?? '#6366f1'
+              return (
+                <Link
+                  key={goal.id}
+                  to={APP_ROUTES.goals}
+                  className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 transition hover:bg-white/80"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50">
+                    <Target size={16} style={{ color: accentColor }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{goal.name}</p>
+                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${pct}%`, backgroundColor: accentColor }}
+                      />
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-xs font-bold text-gray-900">{formatMinor(goal.savedAmountMinor, goal.currency)}</p>
+                    <p className="text-xs text-gray-400">of {formatMinor(goal.targetAmountMinor, goal.currency)}</p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Wallets */}
       <div className="glass-panel-faded animate-slide-up delay-200 rounded-3xl px-4 py-4 sm:px-5 sm:py-5">

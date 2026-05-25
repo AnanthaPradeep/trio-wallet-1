@@ -25,6 +25,12 @@ const PAGE_TITLES: Record<string, string> = {
   '/transfer-internal': 'Transfer',
   '/transfer-bank': 'Wallet to Bank',
   '/bank-to-wallet': 'Bank to Wallet',
+  '/pay': 'Pay',
+  '/scan': 'Scan & QR',
+  '/bank': 'Bank Accounts',
+  '/budgets': 'Budgets',
+  '/recurring': 'Recurring',
+  '/goals': 'Goals',
 }
 
 const NAV_LABELS: Record<string, string> = {
@@ -34,15 +40,26 @@ const NAV_LABELS: Record<string, string> = {
   '/analytics': 'Analytics',
   '/history': 'History',
   '/manage': 'Manage',
+  '/scan': 'Scan',
+  '/pay': 'Pay',
+  '/bank': 'Bank',
+  '/budgets': 'Budgets',
+  '/recurring': 'Recurring',
+  '/goals': 'Goals',
 }
 
 const DESKTOP_PRIMARY_LINKS = [
   { to: APP_ROUTES.dashboard, label: 'Home' },
   { to: APP_ROUTES.analytics, label: 'Analytics' },
   { to: APP_ROUTES.history, label: 'History' },
+  { to: APP_ROUTES.bank, label: 'Bank' },
+  { to: APP_ROUTES.budgets, label: 'Budgets' },
+  { to: APP_ROUTES.recurring, label: 'Recurring' },
+  { to: APP_ROUTES.goals, label: 'Goals' },
 ]
 
 const ACTION_MENU_LINKS = [
+  { to: APP_ROUTES.pay, label: 'Pay' },
   { to: APP_ROUTES.addIncome, label: 'Pool Add' },
   { to: APP_ROUTES.addExpense, label: 'Add Expense' },
   { to: APP_ROUTES.allocateFunds, label: 'Allocate Funds' },
@@ -57,9 +74,14 @@ const TRANSFER_MENU_LINKS = [
 
 const TABLET_NAV_LINKS = [
   { to: APP_ROUTES.dashboard, label: 'Home' },
+  { to: APP_ROUTES.scan, label: 'Scan' },
+  { to: APP_ROUTES.pay, label: 'Pay' },
   { to: APP_ROUTES.analytics, label: 'Analytics' },
   { to: APP_ROUTES.history, label: 'History' },
-  { to: APP_ROUTES.transferInternal, label: 'Transfers' },
+  { to: APP_ROUTES.bank, label: 'Bank' },
+  { to: APP_ROUTES.budgets, label: 'Budgets' },
+  { to: APP_ROUTES.recurring, label: 'Recurring' },
+  { to: APP_ROUTES.goals, label: 'Goals' },
   { to: APP_ROUTES.manage, label: 'Manage' },
 ]
 
@@ -71,11 +93,16 @@ const FOOTER_LINK_GROUPS = [
       { to: APP_ROUTES.analytics, label: 'Analytics' },
       { to: APP_ROUTES.history, label: 'History' },
       { to: APP_ROUTES.manage, label: 'Manage Wallets' },
+      { to: APP_ROUTES.bank, label: 'Bank Accounts' },
+      { to: APP_ROUTES.budgets, label: 'Budgets' },
+      { to: APP_ROUTES.recurring, label: 'Recurring' },
+      { to: APP_ROUTES.goals, label: 'Goals' },
     ],
   },
   {
     title: 'Money Actions',
     links: [
+      { to: APP_ROUTES.pay, label: 'Pay' },
       { to: APP_ROUTES.addIncome, label: 'Add to Pool' },
       { to: APP_ROUTES.addExpense, label: 'Add Expense' },
       { to: APP_ROUTES.allocateFunds, label: 'Allocate Funds' },

@@ -17,6 +17,12 @@ import { ManagePage } from '../../features/wallet/pages/ManagePage'
 import { NotFoundPage } from '../../features/wallet/pages/NotFoundPage'
 import { SpendPage } from '../../features/wallet/pages/SpendPage'
 import { ProfilePage } from '../../features/auth/pages/ProfilePage'
+import { PaymentPage } from '../../features/wallet/pages/PaymentPage'
+import { ScanPage } from '../../features/wallet/pages/ScanPage'
+import { BankPage } from '../../features/wallet/pages/BankPage'
+import { BudgetsPage } from '../../features/wallet/pages/BudgetsPage'
+import { RecurringPage } from '../../features/wallet/pages/RecurringPage'
+import { GoalsPage } from '../../features/wallet/pages/GoalsPage'
 
 export function AppRouter() {
   return (
@@ -42,6 +48,12 @@ export function AppRouter() {
         <Route path={APP_ROUTES.bankToWallet} element={<BankToWalletPage />} />
         <Route path={APP_ROUTES.history} element={<HistoryPage />} />
         <Route path={APP_ROUTES.manage} element={<ManagePage />} />
+        <Route path={APP_ROUTES.pay} element={<PaymentPage />} />
+        <Route path={APP_ROUTES.scan} element={<ScanPage />} />
+        <Route path={APP_ROUTES.bank} element={<BankPage />} />
+        <Route path={APP_ROUTES.budgets} element={<BudgetsPage />} />
+        <Route path={APP_ROUTES.recurring} element={<RecurringPage />} />
+        <Route path={APP_ROUTES.goals} element={<GoalsPage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path={APP_ROUTES.profile} element={<ProfilePage />} />
         <Route path={APP_ROUTES.notFound} element={<NotFoundPage />} />

@@ -1,14 +1,22 @@
 import { uid } from '../../../shared/lib/uid'
 import type {
   AddBankAccountInput,
+  AddBudgetInput,
   AddExpenseInput,
+  AddGoalInput,
   AddIncomeInput,
+  AddRecurringRuleInput,
   AddWalletInput,
   AllocateToWalletInput,
   BankToWalletInput,
   BankTransferInput,
+  Budget,
+  ContributeToGoalInput,
   CurrencyPool,
+  Goal,
   InternalTransferInput,
+  RecurringFrequency,
+  RecurringRule,
   SpendInput,
   Transaction,
   TransactionStatus,
@@ -32,6 +40,20 @@ export type WalletAction =
   | { type: 'REMOVE_WALLET'; payload: { walletId: string } }
   | { type: 'ADD_BANK_ACCOUNT'; payload: AddBankAccountInput }
   | { type: 'REMOVE_BANK_ACCOUNT'; payload: { bankAccountId: string } }
+  | { type: 'ADD_BUDGET'; payload: AddBudgetInput }
+  | { type: 'UPDATE_BUDGET'; payload: { id: string } & Partial<AddBudgetInput> }
+  | { type: 'REMOVE_BUDGET'; payload: { budgetId: string } }
+  | { type: 'ADD_RECURRING_RULE'; payload: AddRecurringRuleInput }
+  | { type: 'UPDATE_RECURRING_RULE'; payload: { id: string } & Partial<AddRecurringRuleInput> }
+  | { type: 'REMOVE_RECURRING_RULE'; payload: { ruleId: string } }
+  | { type: 'TOGGLE_RECURRING_RULE'; payload: { ruleId: string } }
+  | { type: 'PROCESS_RECURRING_RULES' }
+  | { type: 'RUN_RECURRING_RULE'; payload: { ruleId: string } }
+  | { type: 'ADD_GOAL'; payload: AddGoalInput }
+  | { type: 'UPDATE_GOAL'; payload: { id: string } & Partial<AddGoalInput> }
+  | { type: 'REMOVE_GOAL'; payload: { goalId: string } }
+  | { type: 'CONTRIBUTE_TO_GOAL'; payload: ContributeToGoalInput }
+  | { type: 'MARK_GOAL_COMPLETE'; payload: { goalId: string } }
 
 function findWallet(wallets: Wallet[], walletId: string): Wallet {
   const wallet = wallets.find((item) => item.id === walletId)
@@ -437,5 +459,241 @@ function applyExtraActions(state: WalletAppState, action: WalletAction): WalletA
     return { ...state, bankAccounts: state.bankAccounts.filter((b) => b.id !== bankAccountId) }
   }
 
+  if (action.type === 'ADD_BUDGET') {
+    const { name, category, limitMinor, currency, alertThreshold } = action.payload
+    if (limitMinor <= 0) throw new Error('Budget limit must be greater than zero.')
+    const budget: Budget = {
+      id: uid('bgt'),
+      name: name.trim() || category,
+      category,
+      limitMinor,
+      currency,
+      alertThreshold: alertThreshold ?? 80,
+      createdAtIso: new Date().toISOString(),
+    }
+    return { ...state, budgets: [...(state.budgets ?? []), budget] }
+  }
+
+  if (action.type === 'UPDATE_BUDGET') {
+    const { id, ...changes } = action.payload
+    return {
+      ...state,
+      budgets: (state.budgets ?? []).map((b) => (b.id === id ? { ...b, ...changes } : b)),
+    }
+  }
+
+  if (action.type === 'REMOVE_BUDGET') {
+    return {
+      ...state,
+      budgets: (state.budgets ?? []).filter((b) => b.id !== action.payload.budgetId),
+    }
+  }
+
+  if (action.type === 'ADD_RECURRING_RULE') {
+    const { startDateIso, ...rest } = action.payload
+    const rule: RecurringRule = {
+      id: uid('rec'),
+      ...rest,
+      nextDueIso: startDateIso,
+      isActive: true,
+      createdAtIso: new Date().toISOString(),
+    }
+    return { ...state, recurringRules: [...(state.recurringRules ?? []), rule] }
+  }
+
+  if (action.type === 'UPDATE_RECURRING_RULE') {
+    const { id, startDateIso, ...changes } = action.payload
+    return {
+      ...state,
+      recurringRules: (state.recurringRules ?? []).map((r) =>
+        r.id === id ? { ...r, ...changes, ...(startDateIso ? { nextDueIso: startDateIso } : {}) } : r,
+      ),
+    }
+  }
+
+  if (action.type === 'REMOVE_RECURRING_RULE') {
+    return {
+      ...state,
+      recurringRules: (state.recurringRules ?? []).filter((r) => r.id !== action.payload.ruleId),
+    }
+  }
+
+  if (action.type === 'TOGGLE_RECURRING_RULE') {
+    return {
+      ...state,
+      recurringRules: (state.recurringRules ?? []).map((r) =>
+        r.id === action.payload.ruleId ? { ...r, isActive: !r.isActive } : r,
+      ),
+    }
+  }
+
+  if (action.type === 'PROCESS_RECURRING_RULES') {
+    const now = new Date()
+    const dueRules = (state.recurringRules ?? []).filter(
+      (r) => r.isActive && new Date(r.nextDueIso) <= now,
+    )
+    if (dueRules.length === 0) return state
+    let next = state
+    for (const rule of dueRules) {
+      next = fireRecurringRule(next, rule)
+    }
+    return next
+  }
+
+  if (action.type === 'RUN_RECURRING_RULE') {
+    const rule = (state.recurringRules ?? []).find((r) => r.id === action.payload.ruleId)
+    if (!rule) return state
+    return fireRecurringRule(state, rule)
+  }
+
+  if (action.type === 'ADD_GOAL') {
+    const { name, targetAmountMinor, currency, deadline, color } = action.payload
+    if (targetAmountMinor <= 0) throw new Error('Target amount must be greater than zero.')
+    const goal: Goal = {
+      id: uid('goal'),
+      name: name.trim(),
+      targetAmountMinor,
+      savedAmountMinor: 0,
+      currency,
+      deadline,
+      color,
+      isCompleted: false,
+      createdAtIso: new Date().toISOString(),
+    }
+    return { ...state, goals: [...(state.goals ?? []), goal] }
+  }
+
+  if (action.type === 'UPDATE_GOAL') {
+    const { id, ...changes } = action.payload
+    return {
+      ...state,
+      goals: (state.goals ?? []).map((g) => (g.id === id ? { ...g, ...changes } : g)),
+    }
+  }
+
+  if (action.type === 'REMOVE_GOAL') {
+    return {
+      ...state,
+      goals: (state.goals ?? []).filter((g) => g.id !== action.payload.goalId),
+    }
+  }
+
+  if (action.type === 'CONTRIBUTE_TO_GOAL') {
+    const { goalId, walletId, amountMinor } = action.payload
+    const goal = (state.goals ?? []).find((g) => g.id === goalId)
+    const wallet = findWallet(state.wallets, walletId)
+    if (!goal) throw new Error('Goal not found.')
+    if (amountMinor <= 0) throw new Error('Contribution must be greater than zero.')
+    if (wallet.balanceMinor < amountMinor) throw new Error('Insufficient wallet balance.')
+
+    const newSaved = goal.savedAmountMinor + amountMinor
+    const goals = (state.goals ?? []).map((g) =>
+      g.id === goalId
+        ? { ...g, savedAmountMinor: newSaved, isCompleted: newSaved >= g.targetAmountMinor }
+        : g,
+    )
+    const wallets = state.wallets.map((w) =>
+      w.id === walletId ? { ...w, balanceMinor: w.balanceMinor - amountMinor } : w,
+    )
+    const pools = updatePool(state.pools, wallet.currency, (p) => ({
+      ...p,
+      totalSpentMinor: p.totalSpentMinor + amountMinor,
+    }))
+    const tx: Transaction = {
+      id: uid('tx'),
+      type: 'goal_contribution',
+      status: 'completed',
+      currency: wallet.currency,
+      amountMinor,
+      fromWalletId: walletId,
+      note: `Goal: ${goal.name}`,
+      createdAtIso: new Date().toISOString(),
+    }
+    return { ...state, goals, wallets, pools, transactions: [tx, ...state.transactions] }
+  }
+
+  if (action.type === 'MARK_GOAL_COMPLETE') {
+    return {
+      ...state,
+      goals: (state.goals ?? []).map((g) =>
+        g.id === action.payload.goalId ? { ...g, isCompleted: true } : g,
+      ),
+    }
+  }
+
   return null
+}
+
+function advanceNextDue(current: string, frequency: RecurringFrequency): string {
+
+  const now = new Date()
+  const date = new Date(current)
+  do {
+    if (frequency === 'daily')   date.setDate(date.getDate() + 1)
+    else if (frequency === 'weekly')  date.setDate(date.getDate() + 7)
+    else if (frequency === 'monthly') date.setMonth(date.getMonth() + 1)
+    else if (frequency === 'yearly')  date.setFullYear(date.getFullYear() + 1)
+  } while (date <= now)
+  return date.toISOString()
+}
+
+function fireRecurringRule(state: WalletAppState, rule: RecurringRule): WalletAppState {
+  const nextDueIso = advanceNextDue(rule.nextDueIso, rule.frequency)
+  const updatedRules = (state.recurringRules ?? []).map((r) =>
+    r.id === rule.id ? { ...r, nextDueIso } : r,
+  )
+
+  if (rule.type === 'income') {
+    const pool = state.pools.find((p) => p.currency === rule.currency)
+    if (!pool) return { ...state, recurringRules: updatedRules }
+    const pools = updatePool(state.pools, rule.currency, (p) => ({
+      ...p,
+      totalAddedMinor: p.totalAddedMinor + rule.amountMinor,
+      unallocatedMinor: p.unallocatedMinor + rule.amountMinor,
+    }))
+    const tx: Transaction = {
+      id: uid('tx'),
+      type: 'income',
+      status: 'completed',
+      currency: rule.currency,
+      amountMinor: rule.amountMinor,
+      note: rule.note || rule.name,
+      source: rule.source,
+      isRecurring: true,
+      recurringId: rule.id,
+      createdAtIso: new Date().toISOString(),
+    }
+    return { ...state, pools, recurringRules: updatedRules, transactions: [tx, ...state.transactions] }
+  }
+
+  if (rule.type === 'expense' && rule.walletId) {
+    const wallet = state.wallets.find((w) => w.id === rule.walletId)
+    if (!wallet || wallet.balanceMinor < rule.amountMinor) {
+      return { ...state, recurringRules: updatedRules }
+    }
+    const wallets = state.wallets.map((w) =>
+      w.id === rule.walletId ? { ...w, balanceMinor: w.balanceMinor - rule.amountMinor } : w,
+    )
+    const pools = updatePool(state.pools, rule.currency, (p) => ({
+      ...p,
+      totalSpentMinor: p.totalSpentMinor + rule.amountMinor,
+    }))
+    const tx: Transaction = {
+      id: uid('tx'),
+      type: 'expense',
+      status: 'completed',
+      currency: rule.currency,
+      amountMinor: rule.amountMinor,
+      fromWalletId: rule.walletId,
+      note: rule.note || rule.name,
+      category: rule.category,
+      paymentType: rule.paymentType,
+      isRecurring: true,
+      recurringId: rule.id,
+      createdAtIso: new Date().toISOString(),
+    }
+    return { ...state, wallets, pools, recurringRules: updatedRules, transactions: [tx, ...state.transactions] }
+  }
+
+  return { ...state, recurringRules: updatedRules }
 }

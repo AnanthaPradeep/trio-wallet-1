@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { Home, TrendingDown, Wallet, BarChart3, ClipboardList, Settings } from 'lucide-react'
+import { Home, BarChart3, ClipboardList, Settings, ScanLine, CreditCard } from 'lucide-react'
 
 export const APP_ROUTES = {
   dashboard: '/',
@@ -17,6 +17,12 @@ export const APP_ROUTES = {
   manage: '/manage',
   profile: '/profile',
   notFound: '/404',
+  pay: '/pay',
+  scan: '/scan',
+  bank: '/bank',
+  budgets: '/budgets',
+  recurring: '/recurring',
+  goals: '/goals',
 } as const
 
 export interface NavItem {
@@ -26,10 +32,10 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: ReadonlyArray<NavItem> = [
-  { to: APP_ROUTES.dashboard,   labelKey: 'nav.dashboard',  icon: Home         },
-  { to: APP_ROUTES.addExpense,  labelKey: 'nav.addExpense', icon: TrendingDown },
-  { to: APP_ROUTES.addIncome,   labelKey: 'nav.addIncome',  icon: Wallet       },
-  { to: APP_ROUTES.analytics,   labelKey: 'nav.analytics',  icon: BarChart3    },
-  { to: APP_ROUTES.history,     labelKey: 'nav.history',    icon: ClipboardList },
-  { to: APP_ROUTES.manage,      labelKey: 'nav.manage',     icon: Settings     },
+  { to: APP_ROUTES.dashboard, labelKey: 'nav.dashboard', icon: Home         },
+  { to: APP_ROUTES.scan,      labelKey: 'nav.scan',      icon: ScanLine     },
+  { to: APP_ROUTES.pay,       labelKey: 'nav.pay',       icon: CreditCard   },
+  { to: APP_ROUTES.analytics, labelKey: 'nav.analytics', icon: BarChart3    },
+  { to: APP_ROUTES.history,   labelKey: 'nav.history',   icon: ClipboardList },
+  { to: APP_ROUTES.manage,    labelKey: 'nav.manage',    icon: Settings     },
 ]

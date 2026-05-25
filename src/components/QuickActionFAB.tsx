@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { TrendingDown, Wallet, ArrowLeftRight, PlusSquare, X, Plus } from 'lucide-react'
+import { TrendingDown, Wallet, ArrowLeftRight, PlusSquare, X, Plus, CreditCard } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { APP_ROUTES } from '../shared/constants/routes'
 
@@ -12,6 +12,7 @@ interface FabAction {
 }
 
 const FAB_ACTIONS: FabAction[] = [
+  { label: 'Pay',         icon: CreditCard,      to: APP_ROUTES.pay,             color: '#0ea5e9' },
   { label: 'Add Expense', icon: TrendingDown,    to: APP_ROUTES.addExpense,      color: '#ef4444' },
   { label: 'Add Income',  icon: Wallet,          to: APP_ROUTES.addIncome,       color: '#10b981' },
   { label: 'Transfer',    icon: ArrowLeftRight,  to: APP_ROUTES.transferInternal, color: '#3b82f6' },

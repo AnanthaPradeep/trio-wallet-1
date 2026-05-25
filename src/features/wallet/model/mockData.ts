@@ -139,4 +139,7 @@ export const initialWalletState: WalletAppState = {
       createdAtIso: '2026-05-20T15:45:00.000Z',
     },
   ],
+  budgets: [],
+  recurringRules: [],
+  goals: [],
 }
